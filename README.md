@@ -2,6 +2,8 @@
 
 This [repository](http://github.com/voidfiles/python-serialization-benchmark) maintains a set of benchmarks for python serialization frameworks.
 
+You can find the latest benchmarks on [this page](https://voidfiles.github.io/python-serialization-benchmark/).
+
 Currently the following projects are benchmarked.
 
 * [Colander](http://docs.pylonsproject.org/projects/colander/en/latest/)
