@@ -2,10 +2,10 @@ import time
 from tabulate import tabulate
 from contextlib import contextmanager
 
-from subjects import (marsh, rf, serp, strain, col)
+from subjects import (marsh, rf, serp, strain, col, hand)
 from data import ParentTestObject
 
-SUBJECTS = (marsh, rf, serp, strain, col)
+SUBJECTS = (marsh, rf, serp, strain, col, hand)
 
 test_object = ParentTestObject()
 
