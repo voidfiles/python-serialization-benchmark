@@ -1,0 +1,6 @@
+.cache/
+.venv/
+__pycache__
+*.pyc
+index.html
+REPORT.md
