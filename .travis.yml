@@ -5,3 +5,12 @@ python:
 install: "pip install -r requirements.txt"
 # command to run tests
 script: py.test
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
+env:
+  global:
+  - ENCRYPTION_LABEL: "3e8c259749ef"
+  - COMMIT_AUTHOR_EMAIL: "voidfiles@gmail.com"
