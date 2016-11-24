@@ -13,3 +13,4 @@ Currently the following projects are benchmarked.
 * [Strainer](https://github.com/voidfiles/strainer)
 
 Each framework is asked to serialize a list of 2 objcts a 1000 times, and then 1 object a 1000 times.
+
