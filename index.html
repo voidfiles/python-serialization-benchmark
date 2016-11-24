@@ -9,13 +9,15 @@
 <li><a href="https://marshmallow.readthedocs.io/en/latest/">marshmallow</a></li>
 <li><a href="https://github.com/voidfiles/strainer">Strainer</a></li>
 </ul>
+<p>Along with a baseline of a custom function that doesn't use a framework.</p>
 <p>Each framework is asked to serialize a list of 2 objcts a 1000 times, and then 1 object a 1000 times.</p>
 <pre>
 Library                  Many Objects    One Object
 ---------------------  --------------  ------------
-Strainer                    0.0657301     0.0327411
-serpy                       0.102354      0.0389669
-Colander                    0.291603      0.145159
-Marshmallow                 1.25196       0.598393
-Django REST Framework       1.86221       1.30072
+Custom                      0.013675     0.00681901
+Strainer                    0.068732     0.034344
+serpy                       0.0736301    0.039283
+Colander                    0.32582      0.153205
+Marshmallow                 1.29869      0.658006
+Django REST Framework       1.97302      1.3905
 </pre>
