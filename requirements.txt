@@ -6,4 +6,5 @@ pytest
 pystrainer==0.0.4
 colander==1.3.1
 tabulate==0.7.7
+lollipop==1.0.1
 markdown
