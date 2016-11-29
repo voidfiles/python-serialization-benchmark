@@ -6,11 +6,11 @@ You can find the latest benchmarks on [this page](https://voidfiles.github.io/py
 
 Currently the following projects are benchmarked.
 
-* [Colander](http://docs.pylonsproject.org/projects/colander/en/latest/)
 * [Django REST framework](http://www.django-rest-framework.org/)
 * [serpy](https://github.com/clarkduvall/serpy)
 * [marshmallow](https://marshmallow.readthedocs.io/en/latest/)
 * [Strainer](https://github.com/voidfiles/strainer)
+* [Lollipop](https://github.com/maximkulkin/lollipop)
 
 Along with a baseline of a custom function that doesn't use a framework.
 
