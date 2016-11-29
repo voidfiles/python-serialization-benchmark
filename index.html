@@ -3,21 +3,21 @@
 <p>You can find the latest benchmarks on <a href="https://voidfiles.github.io/python-serialization-benchmark/">this page</a>.</p>
 <p>Currently the following projects are benchmarked.</p>
 <ul>
-<li><a href="http://docs.pylonsproject.org/projects/colander/en/latest/">Colander</a></li>
 <li><a href="http://www.django-rest-framework.org/">Django REST framework</a></li>
 <li><a href="https://github.com/clarkduvall/serpy">serpy</a></li>
 <li><a href="https://marshmallow.readthedocs.io/en/latest/">marshmallow</a></li>
 <li><a href="https://github.com/voidfiles/strainer">Strainer</a></li>
+<li><a href="https://github.com/maximkulkin/lollipop">Lollipop</a></li>
 </ul>
 <p>Along with a baseline of a custom function that doesn't use a framework.</p>
 <p>Each framework is asked to serialize a list of 2 objcts a 1000 times, and then 1 object a 1000 times.</p>
 <pre>
 Library                  Many Objects    One Object
 ---------------------  --------------  ------------
-Custom                      0.0139711    0.00697112
-Strainer                    0.069011     0.0333052
-serpy                       0.0743809    0.040561
-Lollipop                    0.651375     0.336125
-Marshmallow                 1.23853      0.625176
-Django REST Framework       1.9754       1.32321
+Custom                      0.013634     0.00682497
+Strainer                    0.0675151    0.0337131
+serpy                       0.0722299    0.0381689
+Lollipop                    0.658723     0.324521
+Marshmallow                 1.2704       0.624744
+Django REST Framework       2.07065      1.33223
 </pre>
