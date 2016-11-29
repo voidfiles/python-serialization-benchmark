@@ -14,5 +14,5 @@ Currently the following projects are benchmarked.
 
 Along with a baseline of a custom function that doesn't use a framework.
 
-Each framework is asked to serialize a list of 2 objcts a 1000 times, and then 1 object a 1000 times.
+Each framework is asked to serialize a list of 2 objects a 1000 times, and then 1 object a 1000 times.
 
