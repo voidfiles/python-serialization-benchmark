@@ -3,7 +3,7 @@ serpy==0.1.1
 djangorestframework==3.5.3
 django==1.9
 pytest
-pystrainer==0.0.4
+pystrainer==0.0.5
 tabulate==0.7.7
 lollipop==1.0.1
 markdown
