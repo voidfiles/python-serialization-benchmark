@@ -7,12 +7,9 @@ You can find the latest benchmarks on [this page](https://voidfiles.github.io/py
 Currently the following projects are benchmarked.
 
 * [Django REST framework](http://www.django-rest-framework.org/)
-* [serpy](https://github.com/clarkduvall/serpy)
-* [marshmallow](https://marshmallow.readthedocs.io/en/latest/)
+* [serpy](http://serpy.readthedocs.io/)
+* [Marshmallow](https://marshmallow.readthedocs.io/en/latest/)
 * [Strainer](https://github.com/voidfiles/strainer)
-* [Lollipop](https://github.com/maximkulkin/lollipop)
+* [Lollipop](http://lollipop.readthedocs.io/en/latest/)
 
-Along with a baseline of a custom function that doesn't use a framework.
-
-Each framework is asked to serialize a list of 2 objects a 1000 times, and then 1 object a 1000 times.
-
+Along with a baseline custom function that doesn't use a framework.
