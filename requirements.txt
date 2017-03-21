@@ -1,6 +1,6 @@
-marshmallow==2.10.4
+marshmallow==2.13.4
 serpy==0.1.1
-djangorestframework==3.5.3
+djangorestframework==3.6.2
 django==1.9
 pytest
 pystrainer==1.1.1
