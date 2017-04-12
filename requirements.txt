@@ -5,5 +5,6 @@ django==1.9
 pytest
 pystrainer==1.1.1
 tabulate==0.7.7
-lollipop==1.0.1
+lollipop==1.1.2
+py-kim==1.0.3
 markdown

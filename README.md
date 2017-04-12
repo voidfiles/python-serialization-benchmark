@@ -11,5 +11,6 @@ Currently the following projects are benchmarked.
 * [Marshmallow](https://marshmallow.readthedocs.io/en/latest/)
 * [Strainer](https://github.com/voidfiles/strainer)
 * [Lollipop](http://lollipop.readthedocs.io/en/latest/)
+* [kim](http://kim.readthedocs.io/en/latest/)
 
 Along with a baseline custom function that doesn't use a framework.

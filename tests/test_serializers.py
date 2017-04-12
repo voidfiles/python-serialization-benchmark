@@ -1,4 +1,4 @@
-from subjects import marsh, rf, serp, strain, hand, loli
+from subjects import marsh, rf, serp, strain, hand, loli, k
 from data import ParentTestObject
 
 TARGET = {
@@ -32,7 +32,7 @@ TARGET = {
 def test_serializers():
     test_object = ParentTestObject()
 
-    for subject in (rf, marsh, serp, strain, hand, loli):
+    for subject in (rf, marsh, serp, strain, hand, loli, k):
         print subject.__name__
         data = subject.serialization_func(test_object, False)
         assert data['foo'] == TARGET['foo']
@@ -47,3 +47,6 @@ def test_serializers():
             assert data['sub']['w'] == TARGET['sub']['w']
             assert data['subs'][3]['y'] == TARGET['subs'][3]['y']
             assert data['subs'][3]['x'] == TARGET['subs'][3]['x']
+
+if __name__ == '__main__':
+    test_serializers()
