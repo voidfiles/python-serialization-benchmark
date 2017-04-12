@@ -37,6 +37,6 @@ class ComplexMapper(Mapper):
 
 def serialization_func(obj, many):
     if many:
-        return [ComplexMapper(obj=x).serialize() for x in obj]
+        return ComplexMapper.many().serialize(obj)
     else:
         return ComplexMapper(obj=obj).serialize()
