@@ -75,6 +75,13 @@ Serialization from python objects to JSON, XML, or other transmission formats is
       <td><a href="https://github.com/voidfiles/strainer#validation">Yes</a></td>
       <td><a href="https://github.com/voidfiles/strainer#validation">Yes</a></td>
     </tr>
+    <tr>
+      <td><a href="http://kim.readthedocs.io/en/latest/">kim</a></td>
+      <td><a href="http://kim.readthedocs.io/en/latest/user/quickstart.html#serializing-data">Yes</a></td>
+      <td>No</td>
+      <td><a href="http://kim.readthedocs.io/en/latest/user/quickstart.html#marshaling-data">Yes</a></td>
+      <td><a href="http://kim.readthedocs.io/en/latest/user/quickstart.html#handling-validation-errors">Yes</a></td>
+    </tr>
   </tbody>
 </table>
 
