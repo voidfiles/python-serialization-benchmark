@@ -7,4 +7,5 @@ pystrainer==1.1.1
 tabulate==0.7.7
 lollipop==1.1.2
 py-kim==1.0.3
+lima==0.5
 markdown

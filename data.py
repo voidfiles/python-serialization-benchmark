@@ -11,7 +11,7 @@ class ParentTestObject(object):
     def __init__(self):
         self.foo = 'bar'
         self.sub = ChildTestObject()
-        self.subs = [ChildTestObject(i) for i in xrange(10)]
+        self.subs = [ChildTestObject(i) for i in range(10)]
 
     def bar(self):
         return 5

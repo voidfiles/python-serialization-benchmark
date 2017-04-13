@@ -2,10 +2,10 @@ import time
 from tabulate import tabulate
 from contextlib import contextmanager
 
-from subjects import (marsh, rf, serp, strain, hand, loli, k)
+from subjects import (marsh, rf, serp, strain, hand, loli, k, lim)
 from data import ParentTestObject
 
-SUBJECTS = (marsh, rf, serp, strain, hand, loli, k)
+SUBJECTS = (marsh, rf, serp, strain, hand, loli, k, lim)
 
 test_object = ParentTestObject()
 
@@ -19,12 +19,12 @@ def timer(tracker):
 
 
 def test_many(func, limit=1000):
-    for i in xrange(0, limit):
+    for i in range(0, limit):
         subject.serialization_func([test_object, test_object], True)
 
 
 def test_one(func, limit=1000):
-    for i in xrange(0, limit):
+    for i in range(0, limit):
         subject.serialization_func(test_object, False)
 
 table = []
@@ -42,4 +42,4 @@ for subject in SUBJECTS:
     table += [row]
 
 table = sorted(table, key=lambda x: x[1] + x[2])
-print tabulate(table, headers=['Library', 'Many Objects', 'One Object',])
+print(tabulate(table, headers=['Library', 'Many Objects (seconds)', 'One Object (seconds)']))
