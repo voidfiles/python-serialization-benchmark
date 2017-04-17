@@ -1,0 +1,6 @@
+py2:
+  build: .
+  command: python benchmark.py
+  dockerfile: Dockerfile
+  volumes:
+    - .:/opt/code
