@@ -1,6 +1,7 @@
 import time
 from tabulate import tabulate
 from contextlib import contextmanager
+from decimal import Decimal
 
 from subjects import (marsh, rf, serp, strain, hand, loli, k, lim)
 from data import ParentTestObject
@@ -42,4 +43,8 @@ for subject in SUBJECTS:
     table += [row]
 
 table = sorted(table, key=lambda x: x[1] + x[2])
-print(tabulate(table, headers=['Library', 'Many Objects (seconds)', 'One Object (seconds)']))
+relative_base = min([x[1] + x[2] for x in table])
+for row in table:
+    result = (row[1] + row[2]) / relative_base
+    row.append(result)
+print(tabulate(table, headers=['Library', 'Many Objects (seconds)', 'One Object (seconds)', 'Relative']))
