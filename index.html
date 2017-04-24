@@ -17,16 +17,29 @@
 <li><a href="http://kim.readthedocs.io/en/latest/">kim</a></li>
 </ul>
 <p>Along with a baseline custom function that doesn't use a framework.</p>
-<pre><code>Library                  Many Objects (seconds)    One Object (seconds)
----------------------  ------------------------  ----------------------
-Custom                                0.0147464              0.00725865
-lima                                  0.0186098              0.00937057
-serpy                                 0.0557761              0.029979
-Strainer                              0.0647128              0.0323169
-Lollipop                              0.569409               0.273222
-Marshmallow                           1.11986                0.468423
-Django REST Framework                 1.2735                 0.877778
-kim                                   2.73208                1.33061
+<h2>Running the test suite</h2>
+<p>A Docker container is bundled with the repository which you can use to run the benchmarks. Firstly make sure you have Docker installed.</p>
+<ol>
+<li>
+<p>Install Docker</p>
+</li>
+<li>
+<p>Build the container <code>$ docker-compose build</code></p>
+</li>
+<li>
+<p>Run the tests. <code>$ docker-compose run --rm tests</code></p>
+</li>
+</ol>
+<pre><code>Library                  Many Objects (seconds)    One Object (seconds)    Relative
+---------------------  ------------------------  ----------------------  ----------
+Custom                                0.015099               0.00744438     1
+lima                                  0.0184031              0.00941515     1.23398
+serpy                                 0.0564134              0.0302956      3.84631
+Strainer                              0.0645332              0.0326135      4.30932
+Lollipop                              0.572213               0.275513      37.6042
+Marshmallow                           0.955579               0.494589      64.3277
+kim                                   1.10544                0.548943      73.3867
+Django REST Framework                 1.38124                0.979011     104.698
 </code></pre>
 
 <h2>The Benchmark</h2>
