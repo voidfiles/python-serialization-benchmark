@@ -1,4 +1,4 @@
-py2:
+tests:
   build: .
   command: python benchmark.py
   dockerfile: Dockerfile
