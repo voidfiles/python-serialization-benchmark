@@ -14,3 +14,14 @@ Currently the following projects are benchmarked.
 * [kim](http://kim.readthedocs.io/en/latest/)
 
 Along with a baseline custom function that doesn't use a framework.
+
+
+## Running the test suite
+
+A Docker container is bundled with the repository which you can use to run the benchmarks. Firstly make sure you have Docker installed.
+
+1. Install Docker
+
+2. Build the container `$ docker-compose build`
+
+3. Run the tests. `$ docker-compose run --rm tests`
