@@ -12,6 +12,7 @@ Currently the following projects are benchmarked.
 * [Strainer](https://github.com/voidfiles/strainer)
 * [Lollipop](http://lollipop.readthedocs.io/en/latest/)
 * [kim](http://kim.readthedocs.io/en/latest/)
+* [toasted-marshmallow](https://github.com/lyft/toasted-marshmallow)
 
 Along with a baseline custom function that doesn't use a framework.
 

@@ -1,4 +1,4 @@
-marshmallow==2.13.4
+toastedmarshmallow==0.1.0
 serpy==0.1.1
 djangorestframework==3.6.3
 django==1.9

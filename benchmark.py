@@ -1,12 +1,11 @@
 import time
 from tabulate import tabulate
 from contextlib import contextmanager
-from decimal import Decimal
 
-from subjects import (marsh, rf, serp, strain, hand, loli, k, lim)
+from subjects import (marsh, rf, serp, strain, hand, loli, k, lim, tmarsh)
 from data import ParentTestObject
 
-SUBJECTS = (marsh, rf, serp, strain, hand, loli, k, lim)
+SUBJECTS = (marsh, rf, serp, strain, hand, loli, k, lim, tmarsh)
 
 test_object = ParentTestObject()
 
