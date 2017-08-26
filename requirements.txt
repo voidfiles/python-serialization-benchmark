@@ -8,5 +8,4 @@ tabulate==0.7.7
 lollipop==1.1.5
 py-kim==1.1.0
 lima==0.5
-pydantic==0.4
 markdown
