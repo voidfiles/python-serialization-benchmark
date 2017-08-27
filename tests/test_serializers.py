@@ -1,6 +1,6 @@
-from subjects import marsh, rf, serp, strain, hand, loli, k, lim, tmarsh
+from subjects import rf, serp, strain, hand, loli, k, lim, tmarsh
 from data import ParentTestObject
-
+import pprint
 TARGET = {
     'foo': 'bar',
     'bar': 5,
@@ -32,9 +32,10 @@ TARGET = {
 def test_serializers():
     test_object = ParentTestObject()
 
-    for subject in (rf, marsh, serp, strain, hand, loli, k, lim, tmarsh):
+    for subject in (rf, tmarsh, serp, strain, hand, loli, k, lim):
         print(subject.__name__)
         data = subject.serialization_func(test_object, False)
+        pprint.pprint(data)
         assert data['foo'] == TARGET['foo']
         assert data['bar'] == TARGET['bar']
         assert data['sub']['w'] == TARGET['sub']['w']

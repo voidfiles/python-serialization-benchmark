@@ -14,8 +14,8 @@ class SubM(marshmallow.Schema):
 
 
 class ComplexM(marshmallow.Schema):
-    foo = marshmallow.fields.Str()
     bar = marshmallow.fields.Int()
+    foo = marshmallow.fields.Str()
     sub = marshmallow.fields.Nested(SubM)
     subs = marshmallow.fields.Nested(SubM, many=True)
 
