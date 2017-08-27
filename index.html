@@ -15,6 +15,7 @@
 <li><a href="https://github.com/voidfiles/strainer">Strainer</a></li>
 <li><a href="http://lollipop.readthedocs.io/en/latest/">Lollipop</a></li>
 <li><a href="http://kim.readthedocs.io/en/latest/">kim</a></li>
+<li><a href="https://github.com/lyft/toasted-marshmallow">toasted-marshmallow</a></li>
 </ul>
 <p>Along with a baseline custom function that doesn't use a framework.</p>
 <h2>Running the test suite</h2>
@@ -32,14 +33,15 @@
 </ol>
 <pre><code>Library                  Many Objects (seconds)    One Object (seconds)    Relative
 ---------------------  ------------------------  ----------------------  ----------
-Custom                                0.015099               0.00744438     1
-lima                                  0.0184031              0.00941515     1.23398
-serpy                                 0.0564134              0.0302956      3.84631
-Strainer                              0.0645332              0.0326135      4.30932
-Lollipop                              0.572213               0.275513      37.6042
-Marshmallow                           0.955579               0.494589      64.3277
-kim                                   1.10544                0.548943      73.3867
-Django REST Framework                 1.38124                0.979011     104.698
+Custom                                0.0256822               0.013052      1
+lima                                  0.0383852               0.0197146     1.49996
+serpy                                 0.104605                0.0706699     4.52507
+Strainer                              0.114318                0.0885544     5.23755
+Toasted Marshmallow                   0.292227                0.135766     11.0495
+Lollipop                              1.23894                 0.419955     42.8277
+Marshmallow                           2.13818                 0.749287     74.5457
+kim                                   2.46978                 1.32616      97.9997
+Django REST Framework                 2.53841                 1.75292     110.789
 </code></pre>
 
 <h2>The Benchmark</h2>
