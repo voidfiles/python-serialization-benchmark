@@ -10,7 +10,7 @@ __name__ = 'Django REST Framework'
 
 
 class SubRF(rf_serializers.Serializer):
-    w = rf_serializers.FloatField()
+    w = rf_serializers.IntegerField()
     x = rf_serializers.SerializerMethodField()
     y = rf_serializers.CharField()
     z = rf_serializers.IntegerField()

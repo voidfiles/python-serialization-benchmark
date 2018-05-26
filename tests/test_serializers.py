@@ -1,4 +1,4 @@
-from subjects import rf, serp, strain, hand, loli, k, lim, tmarsh
+from subjects import rf, serp, strain, col, hand, loli, k, lim, tmarsh
 from data import ParentTestObject
 import pprint
 TARGET = {
@@ -32,22 +32,22 @@ TARGET = {
 def test_serializers():
     test_object = ParentTestObject()
 
-    for subject in (rf, tmarsh, serp, strain, hand, loli, k, lim):
+    for subject in (rf, tmarsh, serp, strain, col, hand, loli, k, lim):
         print(subject.__name__)
         data = subject.serialization_func(test_object, False)
         pprint.pprint(data)
-        assert data['foo'] == TARGET['foo']
-        assert data['bar'] == TARGET['bar']
-        assert data['sub']['w'] == TARGET['sub']['w']
-        assert data['subs'][3]['y'] == TARGET['subs'][3]['y']
-        assert data['subs'][3]['x'] == TARGET['subs'][3]['x']
+        assert str(data['foo']) == str(TARGET['foo'])
+        assert str(data['bar']) == str(TARGET['bar'])
+        assert str(data['sub']['w']) == str(TARGET['sub']['w'])
+        assert str(data['subs'][3]['y']) == str(TARGET['subs'][3]['y'])
+        assert str(data['subs'][3]['x']) == str(TARGET['subs'][3]['x'])
 
         datas = subject.serialization_func([test_object, test_object], True)
         for data in datas:
-            assert data['foo'] == TARGET['foo']
-            assert data['sub']['w'] == TARGET['sub']['w']
-            assert data['subs'][3]['y'] == TARGET['subs'][3]['y']
-            assert data['subs'][3]['x'] == TARGET['subs'][3]['x']
+            assert str(data['foo']) == str(TARGET['foo'])
+            assert str(data['sub']['w']) == str(TARGET['sub']['w'])
+            assert str(data['subs'][3]['y']) == str(TARGET['subs'][3]['y'])
+            assert str(data['subs'][3]['x']) == str(TARGET['subs'][3]['x'])
 
 if __name__ == '__main__':
     test_serializers()
