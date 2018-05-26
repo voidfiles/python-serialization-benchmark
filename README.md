@@ -13,6 +13,7 @@ Currently the following projects are benchmarked.
 * [Lollipop](http://lollipop.readthedocs.io/en/latest/)
 * [kim](http://kim.readthedocs.io/en/latest/)
 * [toasted-marshmallow](https://github.com/lyft/toasted-marshmallow)
+* [Colander](https://docs.pylonsproject.org/projects/colander/en/latest/)
 
 Along with a baseline custom function that doesn't use a framework.
 
