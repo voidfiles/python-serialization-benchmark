@@ -10,7 +10,5 @@ deploy:
     branch: master
 env:
   global:
+  - ENCRYPTION_LABEL: 1dbde6ec09a5
   - COMMIT_AUTHOR_EMAIL: voidfiles@gmail.com
-before_install:
-- openssl aes-256-cbc -K $encrypted_1dbde6ec09a5_key -iv $encrypted_1dbde6ec09a5_iv
-  -in deploy-key.enc -out deploy-key -d
