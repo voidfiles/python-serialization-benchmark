@@ -1,6 +1,6 @@
 toastedmarshmallow==2.15.2.post1
 serpy==0.3.1
-colander==1.4
+colander==1.7.0
 djangorestframework==3.6.3
 django==1.9
 pytest
