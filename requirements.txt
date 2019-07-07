@@ -1,4 +1,4 @@
-toastedmarshmallow==0.1.0
+toastedmarshmallow==2.15.2.post1
 serpy==0.1.1
 colander==1.4
 djangorestframework==3.6.3
