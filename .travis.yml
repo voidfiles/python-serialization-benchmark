@@ -1,9 +1,7 @@
 language: python
 python:
-  - "3.5"
-# command to install dependencies
-install: "pip install -r requirements.txt"
-# command to run tests
+- '3.5'
+install: pip install -r requirements.txt
 script: py.test
 deploy:
   provider: script
@@ -12,5 +10,5 @@ deploy:
     branch: master
 env:
   global:
-  - ENCRYPTION_LABEL: "3e8c259749ef"
-  - COMMIT_AUTHOR_EMAIL: "voidfiles@gmail.com"
+  - ENCRYPTION_LABEL: 1dbde6ec09a5
+  - COMMIT_AUTHOR_EMAIL: voidfiles@gmail.com
