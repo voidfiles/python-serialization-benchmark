@@ -1,6 +1,6 @@
 import strainer
 
-__name__ = 'Strainer'
+name = 'Strainer'
 
 sub_strainer_serializer = strainer.serializer(
   strainer.field('w'),

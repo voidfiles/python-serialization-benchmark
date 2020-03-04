@@ -1,7 +1,7 @@
 import colander
 from colander import null
 
-__name__ = 'Colander'
+name = 'Colander'
 
 
 class ObjectType(colander.Mapping):

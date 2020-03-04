@@ -1,7 +1,7 @@
 import toastedmarshmallow
 import marshmallow
 
-__name__ = 'Toasted Marshmallow'
+name = 'Toasted Marshmallow'
 
 
 class SubM(marshmallow.Schema):

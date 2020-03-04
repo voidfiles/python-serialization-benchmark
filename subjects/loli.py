@@ -1,7 +1,7 @@
 from collections import namedtuple
 from lollipop.types import Object, String, Integer, List, FunctionField, MethodField
 
-__name__ = 'Lollipop'
+name = 'Lollipop'
 
 SubS = namedtuple('SubS', ['w', 'x', 'y', 'z'])
 ComplexS = namedtuple('ComplexS', ['foo', 'bar', 'sub', 'subs'])

@@ -14,6 +14,8 @@ Currently the following projects are benchmarked.
 * [kim](http://kim.readthedocs.io/en/latest/)
 * [toasted-marshmallow](https://github.com/lyft/toasted-marshmallow)
 * [Colander](https://docs.pylonsproject.org/projects/colander/en/latest/)
+* [Lima](https://github.com/b6d/lima/)
+- [Serpyco](https://gitlab.com/sgrignard/serpyco)
 
 Along with a baseline custom function that doesn't use a framework.
 

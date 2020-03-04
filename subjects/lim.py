@@ -1,6 +1,6 @@
 import lima
 
-__name__ = 'lima'
+name = 'lima'
 
 
 class SubM(lima.Schema):

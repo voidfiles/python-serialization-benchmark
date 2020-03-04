@@ -11,3 +11,4 @@ py-kim==1.2.2
 lima==0.5
 markdown
 avro-python3==1.8.2
+serpyco==1.1.0
