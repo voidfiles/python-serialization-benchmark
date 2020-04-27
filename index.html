@@ -9,14 +9,16 @@
 <p>You can find the latest benchmarks on <a href="https://voidfiles.github.io/python-serialization-benchmark/">this page</a>.</p>
 <p>Currently the following projects are benchmarked.</p>
 <ul>
-<li><a href="http://www.django-rest-framework.org/">Django REST framework</a></li>
+<li><a href="http://www.django-rest-framework.org/">Django REST Framework</a></li>
 <li><a href="http://serpy.readthedocs.io/">serpy</a></li>
 <li><a href="https://marshmallow.readthedocs.io/en/latest/">Marshmallow</a></li>
 <li><a href="https://github.com/voidfiles/strainer">Strainer</a></li>
 <li><a href="http://lollipop.readthedocs.io/en/latest/">Lollipop</a></li>
-<li><a href="http://kim.readthedocs.io/en/latest/">kim</a></li>
-<li><a href="https://github.com/lyft/toasted-marshmallow">toasted-marshmallow</a></li>
+<li><a href="http://kim.readthedocs.io/en/latest/">Kim</a></li>
+<li><a href="https://github.com/lyft/toasted-marshmallow">Toasted Marshmallow</a></li>
 <li><a href="https://docs.pylonsproject.org/projects/colander/en/latest/">Colander</a></li>
+<li><a href="https://github.com/b6d/lima/">Lima</a></li>
+<li><a href="https://avro.apache.org/">Avro</a></li>
 </ul>
 <p>Along with a baseline custom function that doesn't use a framework.</p>
 <h2>Running the test suite</h2>
@@ -34,18 +36,18 @@
 </ol>
 <pre><code>Library                  Many Objects (seconds)    One Object (seconds)    Relative
 ---------------------  ------------------------  ----------------------  ----------
-Custom                                0.0104711              0.00514102     1
-lima                                  0.012804               0.00634384     1.22647
-Pickle                                0.0183399              0.0178602      2.31871
-serpy                                 0.0329423              0.0175877      3.23658
-Strainer                              0.0532405              0.0266149      5.11496
-Toasted Marshmallow                   0.0841787              0.0451415      8.28331
-Colander                              0.217609               0.106181      20.7397
-Lollipop                              0.299593               0.142388      28.3101
-Avro                                  0.423823               0.211522      40.6956
-Marshmallow                           0.457737               0.238069      44.5683
-kim                                   0.65399                0.32078       62.4367
-Django REST Framework                 0.784377               0.587458      87.8698
+Custom                                0.0106766              0.00519919     1
+lima                                  0.0125217              0.00629926     1.18551
+Pickle                                0.0173957              0.0172369      2.18147
+serpy                                 0.0332184              0.0176816      3.20613
+Strainer                              0.0534034              0.0266812      5.04444
+Toasted Marshmallow                   0.0825396              0.0447464      8.0176
+Colander                              0.215784               0.105959      20.2662
+Lollipop                              0.301132               0.143556      28.0104
+Avro                                  0.413466               0.207327      39.1031
+Marshmallow                           0.446715               0.22695       42.4334
+kim                                   0.629416               0.311557      59.2709
+Django REST Framework                 0.781569               0.577704      85.6191
 </code></pre>
 
 <h2>The Benchmark</h2>
@@ -99,7 +101,7 @@ benchmark_object = ParentTestObject()
       <td>No</td>
     </tr>
     <tr>
-      <td><a href="https://marshmallow.readthedocs.io/en/latest/">marshmallow</a></td>
+      <td><a href="https://marshmallow.readthedocs.io/en/latest/">Marshmallow</a></td>
       <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#serializing-objects-dumping">Yes</a></td>
       <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#serializing-objects-dumping">Yes</a></td>
       <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#deserializing-objects-loading">Yes</a></td>
@@ -113,18 +115,46 @@ benchmark_object = ParentTestObject()
       <td><a href="http://lollipop.readthedocs.io/en/latest/quickstart.html#validation">Yes</a></td>
     </tr>
     <tr>
-      <td><a href="https://github.com/voidfiles/strainer">strainer</a></td>
+      <td><a href="https://github.com/voidfiles/strainer">Strainer</a></td>
       <td><a href="https://github.com/voidfiles/strainer#serialization-example">Yes</a></td>
-      <td><a href="https://github.com/voidfiles/strainer/blob/master/strainer/encoders.py#L25">Yes</a></td>
+      <td>No</td>
       <td><a href="https://github.com/voidfiles/strainer#validation">Yes</a></td>
       <td><a href="https://github.com/voidfiles/strainer#validation">Yes</a></td>
     </tr>
     <tr>
-      <td><a href="http://kim.readthedocs.io/en/latest/">kim</a></td>
+      <td><a href="http://kim.readthedocs.io/en/latest/">Kim</a></td>
       <td><a href="http://kim.readthedocs.io/en/latest/user/quickstart.html#serializing-data">Yes</a></td>
       <td>No</td>
       <td><a href="http://kim.readthedocs.io/en/latest/user/quickstart.html#marshaling-data">Yes</a></td>
       <td><a href="http://kim.readthedocs.io/en/latest/user/quickstart.html#handling-validation-errors">Yes</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/lyft/toasted-marshmallow">Toasted Marshmallow</a></td>
+      <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#serializing-objects-dumping">Yes</a></td>
+      <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#serializing-objects-dumping">Yes</a></td>
+      <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#deserializing-objects-loading">Yes</a></td>
+      <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#validation">Yes</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.pylonsproject.org/projects/colander/en/latest/">Colander</a></td>
+      <td><a href="https://docs.pylonsproject.org/projects/colander/en/latest/basics.html#serialization">Yes</a></td>
+      <td>No</td>
+      <td><a href="https://docs.pylonsproject.org/projects/colander/en/latest/basics.html#deserialization">Yes<<a></td>
+      <td><a href="https://docs.pylonsproject.org/projects/colander/en/latest/basics.html#defining-a-colander-schema">Yes</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://lima.readthedocs.io/en/latest/index.html">Lima</a></td>
+      <td><a href="https://lima.readthedocs.io/en/latest/index.html">Yes</a></td>
+      <td>No</td>
+      <td>No</td>
+      <td><a ref="https://lima.readthedocs.io/en/latest/fields.html#data-validation">No</a></td>
+    </tr>
+    <tr>
+      <td><a href="http://avro.apache.org/docs/current/gettingstartedpython.html">Avro</a></td>
+      <td><a href="http://avro.apache.org/docs/current/gettingstartedpython.html">Yes</a></td>
+      <td><a href="http://avro.apache.org/docs/current/gettingstartedpython.html">Yes</a></td>
+      <td><a href="http://avro.apache.org/docs/current/gettingstartedpython.html">Yes</a></td>
+      <td>No</td>
     </tr>
   </tbody>
 </table>
