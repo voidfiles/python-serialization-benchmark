@@ -55,7 +55,7 @@ Serialization from python objects to JSON, XML, or other transmission formats is
       <td>No</td>
     </tr>
     <tr>
-      <td><a href="https://marshmallow.readthedocs.io/en/latest/">marshmallow</a></td>
+      <td><a href="https://marshmallow.readthedocs.io/en/latest/">Marshmallow</a></td>
       <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#serializing-objects-dumping">Yes</a></td>
       <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#serializing-objects-dumping">Yes</a></td>
       <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#deserializing-objects-loading">Yes</a></td>
@@ -69,14 +69,14 @@ Serialization from python objects to JSON, XML, or other transmission formats is
       <td><a href="http://lollipop.readthedocs.io/en/latest/quickstart.html#validation">Yes</a></td>
     </tr>
     <tr>
-      <td><a href="https://github.com/voidfiles/strainer">strainer</a></td>
+      <td><a href="https://github.com/voidfiles/strainer">Strainer</a></td>
       <td><a href="https://github.com/voidfiles/strainer#serialization-example">Yes</a></td>
-      <td><a href="https://github.com/voidfiles/strainer/blob/master/strainer/encoders.py#L25">Yes</a></td>
+      <td>No</td>
       <td><a href="https://github.com/voidfiles/strainer#validation">Yes</a></td>
       <td><a href="https://github.com/voidfiles/strainer#validation">Yes</a></td>
     </tr>
     <tr>
-      <td><a href="http://kim.readthedocs.io/en/latest/">kim</a></td>
+      <td><a href="http://kim.readthedocs.io/en/latest/">Kim</a></td>
       <td><a href="http://kim.readthedocs.io/en/latest/user/quickstart.html#serializing-data">Yes</a></td>
       <td>No</td>
       <td><a href="http://kim.readthedocs.io/en/latest/user/quickstart.html#marshaling-data">Yes</a></td>
@@ -88,6 +88,34 @@ Serialization from python objects to JSON, XML, or other transmission formats is
       <td><a href="https://sgrignard.gitlab.io/serpyco/docs/getting_started.html#dump-and-load-to-from-json">Yes</a></td>
       <td><a href="https://sgrignard.gitlab.io/serpyco/docs/api.html#serpyco.Serializer.load">Yes</a></td>
       <td><a href="https://sgrignard.gitlab.io/serpyco/docs/getting_started.html#validate-data">Yes</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/lyft/toasted-marshmallow">Toasted Marshmallow</a></td>
+      <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#serializing-objects-dumping">Yes</a></td>
+      <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#serializing-objects-dumping">Yes</a></td>
+      <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#deserializing-objects-loading">Yes</a></td>
+      <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#validation">Yes</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.pylonsproject.org/projects/colander/en/latest/">Colander</a></td>
+      <td><a href="https://docs.pylonsproject.org/projects/colander/en/latest/basics.html#serialization">Yes</a></td>
+      <td>No</td>
+      <td><a href="https://docs.pylonsproject.org/projects/colander/en/latest/basics.html#deserialization">Yes<<a></td>
+      <td><a href="https://docs.pylonsproject.org/projects/colander/en/latest/basics.html#defining-a-colander-schema">Yes</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://lima.readthedocs.io/en/latest/index.html">Lima</a></td>
+      <td><a href="https://lima.readthedocs.io/en/latest/index.html">Yes</a></td>
+      <td>No</td>
+      <td>No</td>
+      <td><a ref="https://lima.readthedocs.io/en/latest/fields.html#data-validation">No</a></td>
+    </tr>
+    <tr>
+      <td><a href="http://avro.apache.org/docs/current/gettingstartedpython.html">Avro</a></td>
+      <td><a href="http://avro.apache.org/docs/current/gettingstartedpython.html">Yes</a></td>
+      <td><a href="http://avro.apache.org/docs/current/gettingstartedpython.html">Yes</a></td>
+      <td><a href="http://avro.apache.org/docs/current/gettingstartedpython.html">Yes</a></td>
+      <td>No</td>
     </tr>
   </tbody>
 </table>
