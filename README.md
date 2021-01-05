@@ -15,6 +15,7 @@ Currently the following projects are benchmarked.
 * [Toasted Marshmallow](https://github.com/lyft/toasted-marshmallow)
 * [Colander](https://docs.pylonsproject.org/projects/colander/en/latest/)
 * [Lima](https://github.com/b6d/lima/)
+- [Serpyco](https://gitlab.com/sgrignard/serpyco)
 * [Avro](https://avro.apache.org/)
 
 Along with a baseline custom function that doesn't use a framework.

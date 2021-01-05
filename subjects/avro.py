@@ -1,7 +1,7 @@
 import avro.schema
 from avro.io import DatumWriter
 
-__name__ = 'Avro'
+name = 'Avro'
 
 class NullWriter(object):
     def write(self, *args, **kwargs):

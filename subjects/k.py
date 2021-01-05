@@ -1,6 +1,6 @@
 from kim import Mapper, field
 
-__name__ = 'kim'
+name = 'kim'
 
 
 class Complex(object):

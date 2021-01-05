@@ -83,6 +83,13 @@ Serialization from python objects to JSON, XML, or other transmission formats is
       <td><a href="http://kim.readthedocs.io/en/latest/user/quickstart.html#handling-validation-errors">Yes</a></td>
     </tr>
     <tr>
+      <td><a href="https://gitlab.com/sgrignard/serpyco">serpyco</a></td>
+      <td><a href="https://sgrignard.gitlab.io/serpyco/docs/getting_started.html#serialize-dataclasses-instances">Yes</a></td>
+      <td><a href="https://sgrignard.gitlab.io/serpyco/docs/getting_started.html#dump-and-load-to-from-json">Yes</a></td>
+      <td><a href="https://sgrignard.gitlab.io/serpyco/docs/api.html#serpyco.Serializer.load">Yes</a></td>
+      <td><a href="https://sgrignard.gitlab.io/serpyco/docs/getting_started.html#validate-data">Yes</a></td>
+    </tr>
+    <tr>
       <td><a href="https://github.com/lyft/toasted-marshmallow">Toasted Marshmallow</a></td>
       <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#serializing-objects-dumping">Yes</a></td>
       <td><a href="https://marshmallow.readthedocs.io/en/latest/quickstart.html#serializing-objects-dumping">Yes</a></td>

@@ -1,6 +1,6 @@
 import pickle
 
-__name__ = 'Pickle'
+name = 'Pickle'
 
 
 def serialization_func(obj, many):

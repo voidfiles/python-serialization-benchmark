@@ -1,6 +1,6 @@
 import serpy
 
-__name__ = 'serpy'
+name = 'serpy'
 
 
 class SubS(serpy.Serializer):

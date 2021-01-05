@@ -1,4 +1,4 @@
-__name__ = 'Custom'
+name = 'Custom'
 
 
 def sub_to_cstruct(obj):
