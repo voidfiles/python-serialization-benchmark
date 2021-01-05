@@ -18,6 +18,7 @@
 <li><a href="https://github.com/lyft/toasted-marshmallow">Toasted Marshmallow</a></li>
 <li><a href="https://docs.pylonsproject.org/projects/colander/en/latest/">Colander</a></li>
 <li><a href="https://github.com/b6d/lima/">Lima</a></li>
+<li><a href="https://gitlab.com/sgrignard/serpyco">Serpyco</a></li>
 <li><a href="https://avro.apache.org/">Avro</a></li>
 </ul>
 <p>Along with a baseline custom function that doesn't use a framework.</p>
@@ -36,24 +37,24 @@
 </ol>
 <pre><code>Library                  Many Objects (seconds)    One Object (seconds)    Relative
 ---------------------  ------------------------  ----------------------  ----------
-Custom                                0.0106766              0.00519919     1
-lima                                  0.0125217              0.00629926     1.18551
-Pickle                                0.0173957              0.0172369      2.18147
-serpy                                 0.0332184              0.0176816      3.20613
-Strainer                              0.0534034              0.0266812      5.04444
-Toasted Marshmallow                   0.0825396              0.0447464      8.0176
-Colander                              0.215784               0.105959      20.2662
-Lollipop                              0.301132               0.143556      28.0104
-Avro                                  0.413466               0.207327      39.1031
-Marshmallow                           0.446715               0.22695       42.4334
-kim                                   0.629416               0.311557      59.2709
-Django REST Framework                 0.781569               0.577704      85.6191
+serpyco                              0.00796366              0.00406694     1
+Custom                               0.00985813              0.00479531     1.21801
+lima                                 0.0123692               0.00617647     1.54154
+Pickle                               0.0181735               0.0181575      3.01988
+serpy                                0.0357647               0.0186381      4.52204
+Strainer                             0.0541008               0.026659       6.71286
+Toasted Marshmallow                  0.0879436               0.0476737     11.2727
+Colander                             0.230517                0.114572      28.6843
+Lollipop                             0.32575                 0.156234      40.0632
+Avro                                 0.442604                0.219167      55.0073
+Marshmallow                          0.477782                0.258027      61.1615
+kim                                  0.616711                0.307592      76.8293
+Django REST Framework                0.779191                0.535238     109.257
 </code></pre>
-
 <h2>The Benchmark</h2>
 <p>Each framework is asked to serialize a list of 2 objects a 1000 times, and then 1 object a 1000 times.</p>
 <p>This is the current object that is being serialized.</p>
-<pre><code class="python">class ChildTestObject(object):
+<pre><code class="language-python">class ChildTestObject(object):
     def __init__(self, multiplier=None):
         self.w = 1000 * multiplier if multiplier else 100
         self.x = 20 * multiplier if multiplier else 20
@@ -72,7 +73,6 @@ class ParentTestObject(object):
 
 benchmark_object = ParentTestObject()
 </code></pre>
-
 <h2>Discussion</h2>
 <p>Serialization from python objects to JSON, XML, or other transmission formats is a common task for many web related projects. In order to fill that need a number of frameworks have arised. While their aims are similar, they don't all share the same attributes. Here are how some of the features comapre.</p>
 <table class="table">
@@ -127,6 +127,13 @@ benchmark_object = ParentTestObject()
       <td>No</td>
       <td><a href="http://kim.readthedocs.io/en/latest/user/quickstart.html#marshaling-data">Yes</a></td>
       <td><a href="http://kim.readthedocs.io/en/latest/user/quickstart.html#handling-validation-errors">Yes</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://gitlab.com/sgrignard/serpyco">serpyco</a></td>
+      <td><a href="https://sgrignard.gitlab.io/serpyco/docs/getting_started.html#serialize-dataclasses-instances">Yes</a></td>
+      <td><a href="https://sgrignard.gitlab.io/serpyco/docs/getting_started.html#dump-and-load-to-from-json">Yes</a></td>
+      <td><a href="https://sgrignard.gitlab.io/serpyco/docs/api.html#serpyco.Serializer.load">Yes</a></td>
+      <td><a href="https://sgrignard.gitlab.io/serpyco/docs/getting_started.html#validate-data">Yes</a></td>
     </tr>
     <tr>
       <td><a href="https://github.com/lyft/toasted-marshmallow">Toasted Marshmallow</a></td>
