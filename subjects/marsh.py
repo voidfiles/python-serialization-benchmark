@@ -1,5 +1,7 @@
 import marshmallow
 
+from data import ValidatedTestObject
+
 name = 'Marshmallow'
 
 
@@ -20,8 +22,32 @@ class ComplexM(marshmallow.Schema):
     subs = marshmallow.fields.Nested(SubM, many=True)
 
 
+class ComplexMValidator(marshmallow.Schema):
+    id = marshmallow.fields.UUID(data_key="id_")
+    start_date = marshmallow.fields.Date(format="%Y-%m-%d")
+    end_date = marshmallow.fields.Date(format="%Y-%m-%d")
+
+    @marshmallow.validates_schema
+    def validate_range(self, data, **kwargs) -> None:
+        if data['start_date'] > data['end_date']:
+            raise marshmallow.ValidationError("Start date cannot be greater than end date")
+
+    @marshmallow.post_load
+    def make_dto(self, data, **kwargs) -> ValidatedTestObject:
+        return ValidatedTestObject(
+            data["id"],
+            data["start_date"],
+            data["end_date"]
+        )
+
+
 schema = ComplexM()
+validator = ComplexMValidator()
 
 
-def serialization_func(obj, many):
-    return schema.dump(obj, many=many).data
+def serialize_func(obj, many):
+    return schema.dump(obj, many=many)
+
+
+def deserialize_func(obj, many):
+    return validator.load(obj, many=many)

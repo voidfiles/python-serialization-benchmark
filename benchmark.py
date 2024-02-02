@@ -2,12 +2,8 @@ import time
 from tabulate import tabulate
 from contextlib import contextmanager
 
-from subjects import (marsh, rf, serp, strain, col, hand, loli, k, lim, tmarsh, avro, pickle, serpy)
-from data import ParentTestObject
-
-SUBJECTS = (marsh, rf, serp, strain, col, hand, loli, k, lim, tmarsh, avro, pickle, serpy)
-
-test_object = ParentTestObject()
+from subjects import (marsh, rf, dantic)
+from data import ParentTestObject, data_to_validate
 
 
 @contextmanager
@@ -18,32 +14,53 @@ def timer(tracker):
     tracker += [end - start]
 
 
-def test_many(func, limit=1000):
+def test_many(func, test_object, limit=1000):
     for i in range(0, limit):
-        subject.serialization_func([test_object, test_object], True)
+        func([test_object]*2, many=True)
 
 
-def test_one(func, limit=1000):
+def test_one(func, test_object, limit=1000):
     for i in range(0, limit):
-        subject.serialization_func(test_object, False)
+        func(test_object, many=False)
 
-table = []
-for subject in SUBJECTS:
-    row = [subject.name]
 
-    test_many(subject.serialization_func, 2)  # Warmup
-    with timer(row):
-        test_many(subject.serialization_func)
+def benchmark(type_="serialize"):
+    SUBJECTS = (marsh, rf, dantic)
 
-    test_one(subject.serialization_func, 2)  # Warmup
-    with timer(row):
-        test_one(subject.serialization_func)
+    test_objects = {
+        "serialize": (ParentTestObject(), "serialize_func"),
+        "deserialize": (data_to_validate, "deserialize_func"),
+    }
 
-    table += [row]
+    table = []
+    REPETITIONS = 1000
+    for subject in SUBJECTS:
+        row = [subject.name]
+        test_obj, test_func = test_objects[type_]
+        func = getattr(subject, test_func)
 
-table = sorted(table, key=lambda x: x[1] + x[2])
-relative_base = min([x[1] + x[2] for x in table])
-for row in table:
-    result = (row[1] + row[2]) / relative_base
-    row.append(result)
-print(tabulate(table, headers=['Library', 'Many Objects (seconds)', 'One Object (seconds)', 'Relative']))
+        test_many(func, test_obj, 2)  # Warmup
+        with timer(row):
+            test_many(func, test_obj, REPETITIONS)
+
+        test_one(func, test_obj, 2)  # Warmup
+        with timer(row):
+            test_one(func, test_obj, REPETITIONS)
+
+        table += [row]
+
+    table = sorted(table, key=lambda x: x[1] + x[2])
+    relative_base = min([x[1] + x[2] for x in table])
+    # print(table, relative_base)
+    for row in table:
+        result = (row[1] + row[2]) / relative_base
+        row.append(result)
+
+    print(type_)
+    print(tabulate(table, headers=['Library', f'Many Objects {REPETITIONS} times (seconds)', f'One Object {REPETITIONS} times (seconds)', 'Relative']))
+
+
+if __name__ == "__main__":
+    benchmark("serialize")
+    print("=============\n\n")
+    benchmark("deserialize")

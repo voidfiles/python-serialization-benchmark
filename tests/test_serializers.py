@@ -1,4 +1,6 @@
-from subjects import rf, serp, strain, col, hand, loli, k, lim, tmarsh
+import pytest
+
+from subjects import rf, marsh, dantic
 from data import ParentTestObject
 import pprint
 TARGET = {
@@ -29,25 +31,25 @@ TARGET = {
 }
 
 
-def test_serializers():
+@pytest.mark.parametrize('subject', (dantic, rf, marsh,))
+def test_serializers(subject):
     test_object = ParentTestObject()
 
-    for subject in (rf, tmarsh, serp, strain, col, hand, loli, k, lim):
-        print(subject.__name__)
-        data = subject.serialization_func(test_object, False)
-        pprint.pprint(data)
+    data = subject.serialize_func(test_object, False)
+
+    assert str(data['foo']) == str(TARGET['foo'])
+    assert str(data['bar']) == str(TARGET['bar'])
+    assert str(data['sub']['w']) == str(TARGET['sub']['w'])
+    assert str(data['subs'][3]['y']) == str(TARGET['subs'][3]['y'])
+    assert str(data['subs'][3]['x']) == str(TARGET['subs'][3]['x'])
+
+    datas = subject.serialize_func([test_object, test_object], True)
+    for data in datas:
         assert str(data['foo']) == str(TARGET['foo'])
-        assert str(data['bar']) == str(TARGET['bar'])
         assert str(data['sub']['w']) == str(TARGET['sub']['w'])
         assert str(data['subs'][3]['y']) == str(TARGET['subs'][3]['y'])
         assert str(data['subs'][3]['x']) == str(TARGET['subs'][3]['x'])
 
-        datas = subject.serialization_func([test_object, test_object], True)
-        for data in datas:
-            assert str(data['foo']) == str(TARGET['foo'])
-            assert str(data['sub']['w']) == str(TARGET['sub']['w'])
-            assert str(data['subs'][3]['y']) == str(TARGET['subs'][3]['y'])
-            assert str(data['subs'][3]['x']) == str(TARGET['subs'][3]['x'])
 
 if __name__ == '__main__':
     test_serializers()

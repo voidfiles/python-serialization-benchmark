@@ -26,5 +26,9 @@ class ComplexRF(rf_serializers.Serializer):
     subs = SubRF(many=True)
 
 
-def serialization_func(obj, many):
+def serialize_func(obj, many):
     return ComplexRF(obj, many=many).data
+
+
+def deserialize_func(obj, many):
+    return ComplexRF(data=obj, many=many).is_valid()
