@@ -20,3 +20,29 @@ jobs:
       - run: uv sync --locked --python "${{ matrix.python-version }}"
       - run: uv run --python "${{ matrix.python-version }}" pytest
       - run: uv run --python "${{ matrix.python-version }}" serialization-benchmark validate
+
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - run: uv sync --locked --python "3.14"
+      - name: Run primitive smoke benchmark
+        run: >-
+          uv run --python "3.14" serialization-benchmark run primitive
+          --output results/raw/ci-primitive.json
+          --adapter handwritten --operation dump_one --
+          --processes=1 --values=1 --warmups=1 --loops=1
+      - name: Run encoded smoke benchmark
+        run: >-
+          uv run --python "3.14" serialization-benchmark run encoded
+          --output results/raw/ci-encoded.json
+          --adapter msgspec-json --operation encode_one --
+          --processes=1 --values=1 --warmups=1 --loops=1
+      - name: Check raw benchmark files
+        run: |
+          uv run --python "3.14" python -m pyperf check results/raw/ci-primitive.json
+          uv run --python "3.14" python -m pyperf check results/raw/ci-encoded.json

@@ -5,3 +5,39 @@ services:
   tests:
     build: .
     entrypoint: ["uv", "run", "--locked", "pytest"]
+  primitive:
+    build: .
+    command:
+      - run
+      - primitive
+      - --output
+      - results/raw/primitive-smoke.json
+      - --adapter
+      - handwritten
+      - --operation
+      - dump_one
+      - --
+      - --processes=1
+      - --values=1
+      - --warmups=1
+      - --loops=1
+    volumes:
+      - ./results:/app/results
+  encoded:
+    build: .
+    command:
+      - run
+      - encoded
+      - --output
+      - results/raw/encoded-smoke.json
+      - --adapter
+      - msgspec-json
+      - --operation
+      - encode_one
+      - --
+      - --processes=1
+      - --values=1
+      - --warmups=1
+      - --loops=1
+    volumes:
+      - ./results:/app/results

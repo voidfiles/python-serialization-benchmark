@@ -6,5 +6,4 @@ __pycache__/
 *.py[cod]
 dist/
 build/
-index.html
-REPORT.md
+results/site/

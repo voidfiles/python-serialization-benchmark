@@ -1,10 +1,42 @@
 # Python Serialization Benchmark
 
-This project compares Python model serialization at equivalent abstraction levels. Every adapter must pass exact semantic validation before it can be timed. The active adapter registry is the source of truth; abandoned implementations are not retained.
+This project measures maintained Python serialization libraries at equivalent abstraction levels. Every selected adapter must pass exact semantic validation before it can be timed.
 
-The initial cutover provides handwritten model-to-primitive conversion and `dataclasses.asdict`. The latter is intentionally dump-only.
+## What is compared
 
-## Validate
+The primitive tier measures conversion between canonical stdlib dataclass instances and JSON-compatible Python values. It includes:
+
+- Handwritten conversion
+- `dataclasses.asdict` (dump only)
+- Marshmallow
+- Django REST Framework
+- cattrs
+- mashumaro
+- msgspec
+- Pydantic v2
+- serpyco-rs
+- Adaptix 3.0 beta (prerelease)
+
+The encoded tier measures conversion between the same model and bytes, partitioned by format. It includes:
+
+- JSON: stdlib `json`, orjson, msgspec, mashumaro, Pydantic, and serpyco-rs
+- MessagePack: msgspec, mashumaro, serpyco-rs, and ormsgpack
+- Avro: the maintained `avro` distribution
+- Python object persistence: stdlib `pickle`
+
+## What is not compared
+
+Results from different encoded formats are not comparable. Format-crossing rankings, such as JSON against MessagePack, are invalid. Composite scores across formats or operations are also invalid and are deliberately not produced.
+
+## Methodology
+
+All adapters use the same canonical stdlib dataclasses and deterministic fixtures. The single-object cases and 100-object batch cases are measured separately. Adapter construction, schema setup, code generation, converters, and prepared decode inputs live outside the timed operation.
+
+Correctness is a gate, not an assumption. Before timing an adapter, the runner validates exact primitive output or normalized round trips, batch order and cardinality, encoded return types, and deterministic payload lengths. Garbage collection remains enabled and is recorded in the raw metadata. `pyperf` controls processes, warmups, loop calibration, and environment metadata. Encoded reports include payload sizes alongside timing data.
+
+## Install and validate
+
+Python 3.12, 3.13, and 3.14 are supported. Python 3.14 is the canonical benchmark runtime.
 
 ```bash
 uv sync --locked
@@ -12,4 +44,51 @@ uv run pytest
 uv run serialization-benchmark validate
 ```
 
-Python 3.12, 3.13, and 3.14 are supported. Python 3.14 is the canonical benchmark runtime.
+## Run benchmarks
+
+Use the smoke commands to verify the benchmark wiring quickly:
+
+```bash
+uv run serialization-benchmark run primitive --output results/raw/primitive-smoke.json --adapter handwritten --operation dump_one -- --processes=1 --values=1 --warmups=1 --loops=1
+uv run serialization-benchmark run encoded --output results/raw/encoded-smoke.json --adapter msgspec-json --operation encode_one -- --processes=1 --values=1 --warmups=1 --loops=1
+```
+
+Use rigorous runs for complete measurements. These take substantially longer:
+
+```bash
+uv run serialization-benchmark run primitive --output results/raw/primitive.json -- --rigorous
+uv run serialization-benchmark run encoded --output results/raw/encoded.json -- --rigorous
+```
+
+## Generate reports
+
+Generate each format-partitioned Markdown and HTML report from its raw `pyperf` data:
+
+```bash
+uv run serialization-benchmark report results/raw/primitive.json --markdown results/reports/primitive.md --html results/reports/primitive.html
+uv run serialization-benchmark report results/raw/encoded.json --markdown results/reports/encoded.md --html results/reports/encoded.html
+```
+
+## Docker
+
+The Compose services reproduce the locked Python 3.14 environment. The primitive and encoded services write smoke results into the host `results/raw` directory.
+
+```bash
+docker compose build
+docker compose run --rm validate
+docker compose run --rm tests
+docker compose run --rm primitive
+docker compose run --rm encoded
+```
+
+## Interpreting results
+
+Compare rows only within the same tier, format, operation, batch size, and model strategy. Relative values are meaningful only against the baseline in that table. Measurements from different machines are not directly comparable, including results from different hosted CI runners.
+
+## Pickle safety
+
+Never decode pickle bytes from an untrusted source. Pickle can execute arbitrary code while loading data and is included only as a Python object-persistence benchmark.
+
+## Adding an adapter
+
+Implement the appropriate primitive or encoded adapter contract, add an explicit instance to `serialization_benchmark.registry`, and declare its stable metadata and supported operations. The adapter must pass exact contract validation for every registered operation. Encoded adapters must declare their format so reports keep results in the correct format partition.
