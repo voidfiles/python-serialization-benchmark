@@ -1,32 +1,15 @@
 # Python Serialization Benchmark
 
-This [repository](http://github.com/voidfiles/python-serialization-benchmark) maintains a set of benchmarks for python serialization frameworks.
+This project compares Python model serialization at equivalent abstraction levels. Every adapter must pass exact semantic validation before it can be timed. The active adapter registry is the source of truth; abandoned implementations are not retained.
 
-You can find the latest benchmarks on [this page](https://voidfiles.github.io/python-serialization-benchmark/).
+The initial cutover provides handwritten model-to-primitive conversion and `dataclasses.asdict`. The latter is intentionally dump-only.
 
-Currently the following projects are benchmarked.
+## Validate
 
-* [Django REST Framework](http://www.django-rest-framework.org/)
-* [serpy](http://serpy.readthedocs.io/)
-* [Marshmallow](https://marshmallow.readthedocs.io/en/latest/)
-* [Strainer](https://github.com/voidfiles/strainer)
-* [Lollipop](http://lollipop.readthedocs.io/en/latest/)
-* [Kim](http://kim.readthedocs.io/en/latest/)
-* [Toasted Marshmallow](https://github.com/lyft/toasted-marshmallow)
-* [Colander](https://docs.pylonsproject.org/projects/colander/en/latest/)
-* [Lima](https://github.com/b6d/lima/)
-- [Serpyco](https://gitlab.com/sgrignard/serpyco)
-* [Avro](https://avro.apache.org/)
+```bash
+uv sync --locked
+uv run pytest
+uv run serialization-benchmark validate
+```
 
-Along with a baseline custom function that doesn't use a framework.
-
-
-## Running the test suite
-
-A Docker container is bundled with the repository which you can use to run the benchmarks. Firstly make sure you have Docker installed.
-
-1. Install Docker
-
-2. Build the container `$ docker-compose build`
-
-3. Run the tests. `$ docker-compose run --rm tests`
+Python 3.12, 3.13, and 3.14 are supported. Python 3.14 is the canonical benchmark runtime.

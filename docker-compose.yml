@@ -1,8 +1,7 @@
 services:
+  validate:
+    build: .
+    command: ["validate"]
   tests:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: python benchmark.py
-    volumes:
-      - .:/opt/code
+    build: .
+    entrypoint: ["uv", "run", "--locked", "pytest"]

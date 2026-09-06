@@ -1,7 +1,10 @@
 .cache/
 .venv/
+.pytest_cache/
 .worktrees/
-__pycache__
-*.pyc
+__pycache__/
+*.py[cod]
+dist/
+build/
 index.html
 REPORT.md
