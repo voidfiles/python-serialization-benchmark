@@ -5,6 +5,14 @@ from serialization_benchmark.adapters.baselines import (
 from serialization_benchmark.adapters.adaptix import AdaptixAdapter
 from serialization_benchmark.adapters.cattrs import CattrsAdapter
 from serialization_benchmark.adapters.drf import DrfAdapter
+from serialization_benchmark.adapters.encoded_json import (
+    MashumaroJsonAdapter,
+    MsgspecJsonAdapter,
+    OrjsonAdapter,
+    PydanticJsonAdapter,
+    SerpycoRsJsonAdapter,
+    StdlibJsonAdapter,
+)
 from serialization_benchmark.adapters.marshmallow import MarshmallowAdapter
 from serialization_benchmark.adapters.mashumaro import MashumaroAdapter
 from serialization_benchmark.adapters.msgspec import MsgspecAdapter
@@ -24,7 +32,14 @@ _PRIMITIVE_ADAPTERS: tuple[PrimitiveAdapter, ...] = (
     SerpycoRsAdapter(),
     AdaptixAdapter(),
 )
-_ENCODED_ADAPTERS: tuple[EncodedAdapter, ...] = ()
+_ENCODED_ADAPTERS: tuple[EncodedAdapter, ...] = (
+    StdlibJsonAdapter(),
+    OrjsonAdapter(),
+    MsgspecJsonAdapter(),
+    MashumaroJsonAdapter(),
+    PydanticJsonAdapter(),
+    SerpycoRsJsonAdapter(),
+)
 
 
 def primitive_adapters() -> tuple[PrimitiveAdapter, ...]:

@@ -15,7 +15,10 @@ import pyperf
 from serialization_benchmark.contracts import EncodedAdapter, PrimitiveAdapter
 from serialization_benchmark.fixtures import FixtureSet, make_fixtures
 from serialization_benchmark.registry import encoded_adapters, primitive_adapters
-from serialization_benchmark.validation import validate_primitive_adapter
+from serialization_benchmark.validation import (
+    validate_encoded_adapter,
+    validate_primitive_adapter,
+)
 
 _UNREACHABLE_SENTINEL = object()
 
@@ -34,6 +37,7 @@ def _case_metadata(
     operation: str,
     batch_size: int,
     encoded_format: str = "",
+    payload_bytes: int | None = None,
 ) -> dict[str, str | int]:
     metadata: dict[str, str | int] = {
         "tier": tier,
@@ -49,6 +53,8 @@ def _case_metadata(
     }
     if encoded_format:
         metadata["format"] = encoded_format
+    if payload_bytes is not None:
+        metadata["payload_bytes"] = payload_bytes
     return metadata
 
 
@@ -159,6 +165,7 @@ def build_encoded_cases(
                         operation="decode_one",
                         batch_size=1,
                         encoded_format=adapter.format,
+                        payload_bytes=len(encoded_one),
                     ),
                 )
             )
@@ -188,6 +195,7 @@ def build_encoded_cases(
                         operation="decode_many",
                         batch_size=len(many),
                         encoded_format=adapter.format,
+                        payload_bytes=len(encoded_many),
                     ),
                 )
             )
@@ -287,7 +295,9 @@ def main() -> int:
         adapters = _selected_adapters(encoded_adapters(), args.adapter)
         if not adapters:
             raise RuntimeError("no encoded adapters were selected")
-        raise NotImplementedError("encoded adapter validation is not implemented")
+        for adapter in adapters:
+            validate_encoded_adapter(adapter, fixtures)
+        cases = build_encoded_cases(fixtures, adapters)
 
     selected_cases = _filter_cases(cases, args.adapter, args.operation)
     if not selected_cases:

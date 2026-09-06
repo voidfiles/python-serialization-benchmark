@@ -14,4 +14,11 @@ def test_primitive_registry_order() -> None:
         "serpyco-rs",
         "adaptix",
     ]
-    assert encoded_adapters() == ()
+    assert [adapter.metadata.slug for adapter in encoded_adapters()] == [
+        "stdlib-json",
+        "orjson",
+        "msgspec-json",
+        "mashumaro-json",
+        "pydantic-json",
+        "serpyco-rs-json",
+    ]
