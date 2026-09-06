@@ -2,6 +2,7 @@ from serialization_benchmark.adapters.baselines import (
     DataclassesAsdictAdapter,
     HandwrittenAdapter,
 )
+from serialization_benchmark.adapters.cattrs import CattrsAdapter
 from serialization_benchmark.adapters.drf import DrfAdapter
 from serialization_benchmark.adapters.marshmallow import MarshmallowAdapter
 from serialization_benchmark.contracts import EncodedAdapter, PrimitiveAdapter
@@ -11,6 +12,7 @@ _PRIMITIVE_ADAPTERS: tuple[PrimitiveAdapter, ...] = (
     DataclassesAsdictAdapter(),
     MarshmallowAdapter(),
     DrfAdapter(),
+    CattrsAdapter(),
 )
 _ENCODED_ADAPTERS: tuple[EncodedAdapter, ...] = ()
 

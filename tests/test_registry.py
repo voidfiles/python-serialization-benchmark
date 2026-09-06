@@ -7,5 +7,6 @@ def test_primitive_registry_order() -> None:
         "dataclasses-asdict",
         "marshmallow",
         "drf",
+        "cattrs",
     ]
     assert encoded_adapters() == ()

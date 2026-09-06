@@ -5,6 +5,7 @@ description = "A reproducible benchmark of maintained Python serialization libra
 readme = "README.md"
 requires-python = ">=3.12,<3.15"
 dependencies = [
+    "cattrs==26.2.0",
     "django==6.1.1",
     "djangorestframework==3.18.0",
     "marshmallow==4.3.1",
