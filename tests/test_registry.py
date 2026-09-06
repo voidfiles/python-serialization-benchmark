@@ -8,5 +8,6 @@ def test_primitive_registry_order() -> None:
         "marshmallow",
         "drf",
         "cattrs",
+        "mashumaro",
     ]
     assert encoded_adapters() == ()

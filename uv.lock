@@ -86,6 +86,18 @@ wheels = [
 ]
 
 [[package]]
+name = "mashumaro"
+version = "3.22"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d1/e3/a06dcd2e6df094c5e294721926f1f76da30f50823e2ac233a9198e804891/mashumaro-3.22.tar.gz", hash = "sha256:64538cc365204402a060ebde683a86505b5a4344acf6870d79021e9fbfe57360", size = 197845 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9b/1c/92fd926c2e7763535454683250dbdd8d10aa2f2c62f58d6abbcce4d8b3fc/mashumaro-3.22-py3-none-any.whl", hash = "sha256:17dc4d7294c33ef380a8b929dda0608577aa2141988c00a0c4932310108fe71d", size = 95916 },
+]
+
+[[package]]
 name = "packaging"
 version = "26.3"
 source = { registry = "https://pypi.org/simple" }
@@ -137,6 +149,7 @@ dependencies = [
     { name = "django" },
     { name = "djangorestframework" },
     { name = "marshmallow" },
+    { name = "mashumaro" },
 ]
 
 [package.dev-dependencies]
@@ -150,6 +163,7 @@ requires-dist = [
     { name = "django", specifier = "==6.1.1" },
     { name = "djangorestframework", specifier = "==3.18.0" },
     { name = "marshmallow", specifier = "==4.3.1" },
+    { name = "mashumaro", specifier = "==3.22" },
 ]
 
 [package.metadata.requires-dev]

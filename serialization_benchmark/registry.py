@@ -5,6 +5,7 @@ from serialization_benchmark.adapters.baselines import (
 from serialization_benchmark.adapters.cattrs import CattrsAdapter
 from serialization_benchmark.adapters.drf import DrfAdapter
 from serialization_benchmark.adapters.marshmallow import MarshmallowAdapter
+from serialization_benchmark.adapters.mashumaro import MashumaroAdapter
 from serialization_benchmark.contracts import EncodedAdapter, PrimitiveAdapter
 
 _PRIMITIVE_ADAPTERS: tuple[PrimitiveAdapter, ...] = (
@@ -13,6 +14,7 @@ _PRIMITIVE_ADAPTERS: tuple[PrimitiveAdapter, ...] = (
     MarshmallowAdapter(),
     DrfAdapter(),
     CattrsAdapter(),
+    MashumaroAdapter(),
 )
 _ENCODED_ADAPTERS: tuple[EncodedAdapter, ...] = ()
 
