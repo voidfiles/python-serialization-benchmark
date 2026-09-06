@@ -9,5 +9,6 @@ def test_primitive_registry_order() -> None:
         "drf",
         "cattrs",
         "mashumaro",
+        "msgspec",
     ]
     assert encoded_adapters() == ()
