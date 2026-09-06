@@ -5,5 +5,6 @@ def test_primitive_registry_order() -> None:
     assert [adapter.metadata.slug for adapter in primitive_adapters()] == [
         "handwritten",
         "dataclasses-asdict",
+        "marshmallow",
     ]
     assert encoded_adapters() == ()

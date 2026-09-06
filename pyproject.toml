@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "A reproducible benchmark of maintained Python serialization libraries"
 readme = "README.md"
 requires-python = ">=3.12,<3.15"
-dependencies = []
+dependencies = [
+    "marshmallow==4.3.1",
+]
 
 [project.scripts]
 serialization-benchmark = "serialization_benchmark.cli:main"
