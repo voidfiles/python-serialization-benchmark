@@ -44,9 +44,11 @@ class BenchmarkReport:
 def load_report(path: Path) -> BenchmarkReport:
     try:
         suite = pyperf.BenchmarkSuite.load(str(path))
-    except (OSError, TypeError, ValueError) as error:
+    except (AttributeError, KeyError, OSError, TypeError, ValueError) as error:
         raise ReportError(f"could not load pyperf results from {path}: {error}") from error
 
+    suite_metadata = suite.get_metadata()
+    _validate_suite_metadata(suite_metadata)
     rows: list[ResultRow] = []
     for benchmark in suite.get_benchmarks():
         metadata = benchmark.get_metadata()
@@ -63,7 +65,7 @@ def load_report(path: Path) -> BenchmarkReport:
                 adapter_name=_required_str(metadata, "adapter_name", benchmark_name),
                 library_version=_required_str(metadata, "library_version", benchmark_name),
                 model_strategy=_required_str(metadata, "model_strategy", benchmark_name),
-                prerelease=_required_str(metadata, "prerelease", benchmark_name) == "true",
+                prerelease=_required_prerelease(metadata, benchmark_name),
                 mean_seconds=mean,
                 stdev_seconds=benchmark.stdev() if sample_count > 1 else 0.0,
                 operations_per_second=1.0 / mean,
@@ -73,7 +75,7 @@ def load_report(path: Path) -> BenchmarkReport:
         )
     return BenchmarkReport(
         rows=tuple(sorted(rows, key=_result_sort_key)),
-        metadata=_narrow_metadata(suite.get_metadata()),
+        metadata=_narrow_metadata(suite_metadata),
     )
 
 
@@ -139,6 +141,13 @@ def _optional_int(metadata: dict[str, object], key: str, benchmark: str) -> int 
     return _required_int(metadata, key, benchmark)
 
 
+def _required_prerelease(metadata: dict[str, object], benchmark: str) -> bool:
+    value = _required_str(metadata, "prerelease", benchmark)
+    if value not in {"true", "false"}:
+        raise ReportError(f"benchmark {benchmark!r} has invalid prerelease metadata {value!r}")
+    return value == "true"
+
+
 def _narrow_metadata(metadata: dict[str, object]) -> dict[str, MetadataValue]:
     narrowed: dict[str, MetadataValue] = {}
     for key, value in metadata.items():
@@ -147,6 +156,28 @@ def _narrow_metadata(metadata: dict[str, object]) -> dict[str, MetadataValue]:
         else:
             narrowed[key] = pyperf.format_metadata(key, value)
     return narrowed
+
+
+def _validate_suite_metadata(metadata: dict[str, object]) -> None:
+    required_strings = (
+        "python_version",
+        "python_implementation",
+        "platform",
+        "git_revision",
+        "benchmark_version",
+        "gc",
+        "run_utc",
+        "unit",
+    )
+    for key in required_strings:
+        _required_str(metadata, key, "suite")
+    _required_int(metadata, "cpu_count", "suite")
+    if "cpu_model_name" in metadata:
+        _required_str(metadata, "cpu_model_name", "suite")
+    if metadata["unit"] != "second":
+        raise ReportError("suite metadata 'unit' must be 'second'")
+    if metadata["gc"] != "enabled":
+        raise ReportError("suite metadata 'gc' must be 'enabled'")
 
 
 def _result_sort_key(row: ResultRow) -> tuple[int, str, str, int, str, str]:
@@ -189,33 +220,40 @@ def _group_title(key: GroupKey) -> str:
 
 
 def _environment_rows(metadata: dict[str, MetadataValue]) -> tuple[tuple[str, str], ...]:
-    benchmark_version = _required_metadata(metadata, "benchmark_version", "benchmark_package_version")
-    gc_policy = _required_metadata(metadata, "gc", "gc_policy")
     return (
         ("Python", _required_metadata(metadata, "python_version") + f" ({_required_metadata(metadata, 'python_implementation')})"),
         ("Platform", _required_metadata(metadata, "platform")),
         ("CPU model", _optional_metadata(metadata, "cpu_model_name") or "Unknown"),
-        ("CPU count", _required_metadata(metadata, "cpu_count")),
+        ("CPU count", _required_integer_metadata(metadata, "cpu_count")),
         ("Git revision", _required_metadata(metadata, "git_revision")),
-        ("Benchmark version", benchmark_version),
-        ("GC policy", gc_policy),
+        ("Benchmark version", _required_metadata(metadata, "benchmark_version")),
+        ("GC policy", _required_metadata(metadata, "gc")),
         ("Run UTC", _required_metadata(metadata, "run_utc")),
         ("Unit", _required_metadata(metadata, "unit")),
     )
 
 
-def _required_metadata(metadata: dict[str, MetadataValue], *keys: str) -> str:
-    for key in keys:
-        value = metadata.get(key)
-        if value is not None:
-            return str(value)
-    joined = " or ".join(repr(key) for key in keys)
-    raise ReportError(f"report metadata is missing required value {joined}")
+def _required_metadata(metadata: dict[str, MetadataValue], key: str) -> str:
+    value = metadata.get(key)
+    if type(value) is not str:
+        raise ReportError(f"report metadata has missing or non-string value {key!r}")
+    return value
+
+
+def _required_integer_metadata(metadata: dict[str, MetadataValue], key: str) -> str:
+    value = metadata.get(key)
+    if type(value) is not int:
+        raise ReportError(f"report metadata has missing or non-integer value {key!r}")
+    return str(value)
 
 
 def _optional_metadata(metadata: dict[str, MetadataValue], key: str) -> str | None:
     value = metadata.get(key)
-    return None if value is None else str(value)
+    if value is None:
+        return None
+    if type(value) is not str:
+        raise ReportError(f"report metadata has non-string value {key!r}")
+    return value
 
 
 def _markdown_table(key: GroupKey, rows: tuple[ResultRow, ...]) -> list[str]:

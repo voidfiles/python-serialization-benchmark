@@ -228,8 +228,8 @@ def _git_revision() -> str:
 def _global_metadata(run_utc: str) -> dict[str, str]:
     return {
         "git_revision": _git_revision(),
-        "benchmark_package_version": version("python-serialization-benchmark"),
-        "gc_policy": "enabled",
+        "benchmark_version": version("python-serialization-benchmark"),
+        "gc": "enabled",
         "run_utc": run_utc,
     }
 

@@ -2,6 +2,7 @@ import subprocess
 from pathlib import Path
 
 import pyperf
+import pytest
 
 
 def test_validate_command_succeeds() -> None:
@@ -102,3 +103,31 @@ def test_report_command_writes_partitioned_artifacts(tmp_path: Path) -> None:
     assert markdown.read_text().count("| Version |") == 2
     assert "Composite" not in markdown.read_text()
     assert html.read_text().count("<table") == 2
+
+
+@pytest.mark.parametrize("contents", ['{"version": "1.0"}', "[]"])
+def test_report_command_handles_structurally_invalid_pyperf_json(
+    tmp_path: Path,
+    contents: str,
+) -> None:
+    raw_json = tmp_path / "invalid.json"
+    raw_json.write_text(contents)
+
+    completed = subprocess.run(
+        [
+            "serialization-benchmark",
+            "report",
+            str(raw_json),
+            "--markdown",
+            str(tmp_path / "report.md"),
+            "--html",
+            str(tmp_path / "report.html"),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 1
+    assert completed.stderr.startswith("report failed:")
+    assert "Traceback" not in completed.stderr

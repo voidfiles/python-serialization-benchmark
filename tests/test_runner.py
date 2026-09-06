@@ -1,5 +1,14 @@
 from serialization_benchmark.fixtures import make_fixtures
-from serialization_benchmark.runner import build_encoded_cases, build_primitive_cases
+from serialization_benchmark.runner import _global_metadata, build_encoded_cases, build_primitive_cases
+
+
+def test_global_metadata_uses_canonical_report_keys() -> None:
+    metadata = _global_metadata("2026-09-06T21:00:00+00:00")
+
+    assert metadata["benchmark_version"]
+    assert metadata["gc"] == "enabled"
+    assert "benchmark_package_version" not in metadata
+    assert "gc_policy" not in metadata
 
 
 def test_primitive_cases_are_partitioned_by_operation() -> None:
