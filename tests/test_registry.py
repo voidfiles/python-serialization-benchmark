@@ -6,5 +6,6 @@ def test_primitive_registry_order() -> None:
         "handwritten",
         "dataclasses-asdict",
         "marshmallow",
+        "drf",
     ]
     assert encoded_adapters() == ()
