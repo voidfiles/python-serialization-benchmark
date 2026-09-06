@@ -13,12 +13,14 @@ from serialization_benchmark.adapters.encoded_json import (
     SerpycoRsJsonAdapter,
     StdlibJsonAdapter,
 )
+from serialization_benchmark.adapters.encoded_avro import AvroAdapter
 from serialization_benchmark.adapters.encoded_msgpack import (
     MashumaroMessagePackAdapter,
     MsgspecMessagePackAdapter,
     OrmsgpackAdapter,
     SerpycoRsMessagePackAdapter,
 )
+from serialization_benchmark.adapters.encoded_pickle import PickleAdapter
 from serialization_benchmark.adapters.marshmallow import MarshmallowAdapter
 from serialization_benchmark.adapters.mashumaro import MashumaroAdapter
 from serialization_benchmark.adapters.msgspec import MsgspecAdapter
@@ -49,6 +51,8 @@ _ENCODED_ADAPTERS: tuple[EncodedAdapter, ...] = (
     MashumaroMessagePackAdapter(),
     SerpycoRsMessagePackAdapter(),
     OrmsgpackAdapter(),
+    AvroAdapter(),
+    PickleAdapter(),
 )
 
 

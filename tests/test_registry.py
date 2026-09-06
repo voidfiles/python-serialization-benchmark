@@ -25,4 +25,6 @@ def test_primitive_registry_order() -> None:
         "mashumaro-msgpack",
         "serpyco-rs-msgpack",
         "ormsgpack",
+        "avro",
+        "pickle",
     ]

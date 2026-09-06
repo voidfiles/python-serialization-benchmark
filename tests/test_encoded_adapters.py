@@ -43,3 +43,19 @@ def test_messagepack_adapters_are_registered() -> None:
         "serpyco-rs-msgpack",
         "ormsgpack",
     ]
+
+
+def test_avro_adapters_are_registered() -> None:
+    assert [
+        adapter.metadata.slug
+        for adapter in encoded_adapters()
+        if adapter.format == "avro"
+    ] == ["avro"]
+
+
+def test_pickle_adapters_are_registered() -> None:
+    assert [
+        adapter.metadata.slug
+        for adapter in encoded_adapters()
+        if adapter.format == "pickle"
+    ] == ["pickle"]

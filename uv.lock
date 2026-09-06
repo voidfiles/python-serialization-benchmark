@@ -47,6 +47,15 @@ wheels = [
 ]
 
 [[package]]
+name = "avro"
+version = "1.12.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/5f/68/973b9c682aa2c3cf2b05fc4c961af11b9be1d9b46604f65aed23cd4fd1e6/avro-1.12.2.tar.gz", hash = "sha256:e900e7b59a4781f63d9e935e88f6ec50c4d60be3f4adf9c63b51ed39d578fe08", size = 105500 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/51/10/48f47d5da1fda33e2951019d38449e201efd9042117ad660aa4dcbf9268b/avro-1.12.2-py3-none-any.whl", hash = "sha256:bcbed5da65d298cb4ceb1e61f1a61b5b9fb180049c904f4045022338a95bf686", size = 134848 },
+]
+
+[[package]]
 name = "cattrs"
 version = "26.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -479,6 +488,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "adaptix" },
+    { name = "avro" },
     { name = "cattrs" },
     { name = "django" },
     { name = "djangorestframework" },
@@ -501,6 +511,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "adaptix", specifier = "==3.0.0b12" },
+    { name = "avro", specifier = "==1.12.2" },
     { name = "cattrs", specifier = "==26.2.0" },
     { name = "django", specifier = "==6.1.1" },
     { name = "djangorestframework", specifier = "==3.18.0" },
