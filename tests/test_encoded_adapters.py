@@ -30,3 +30,16 @@ def test_json_adapters_are_registered() -> None:
         "pydantic-json",
         "serpyco-rs-json",
     ]
+
+
+def test_messagepack_adapters_are_registered() -> None:
+    assert [
+        adapter.metadata.slug
+        for adapter in encoded_adapters()
+        if adapter.format == "messagepack"
+    ] == [
+        "msgspec-msgpack",
+        "mashumaro-msgpack",
+        "serpyco-rs-msgpack",
+        "ormsgpack",
+    ]

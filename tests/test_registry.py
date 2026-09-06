@@ -21,4 +21,8 @@ def test_primitive_registry_order() -> None:
         "mashumaro-json",
         "pydantic-json",
         "serpyco-rs-json",
+        "msgspec-msgpack",
+        "mashumaro-msgpack",
+        "serpyco-rs-msgpack",
+        "ormsgpack",
     ]
