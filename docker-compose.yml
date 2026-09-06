@@ -1,6 +1,8 @@
-tests:
-  build: .
-  command: python benchmark.py
-  dockerfile: Dockerfile
-  volumes:
-    - .:/opt/code
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python benchmark.py
+    volumes:
+      - .:/opt/code
