@@ -8,6 +8,7 @@ from serialization_benchmark.adapters.marshmallow import MarshmallowAdapter
 from serialization_benchmark.adapters.mashumaro import MashumaroAdapter
 from serialization_benchmark.adapters.msgspec import MsgspecAdapter
 from serialization_benchmark.adapters.pydantic import PydanticAdapter
+from serialization_benchmark.adapters.serpyco_rs import SerpycoRsAdapter
 from serialization_benchmark.contracts import EncodedAdapter, PrimitiveAdapter
 
 _PRIMITIVE_ADAPTERS: tuple[PrimitiveAdapter, ...] = (
@@ -19,6 +20,7 @@ _PRIMITIVE_ADAPTERS: tuple[PrimitiveAdapter, ...] = (
     MashumaroAdapter(),
     MsgspecAdapter(),
     PydanticAdapter(),
+    SerpycoRsAdapter(),
 )
 _ENCODED_ADAPTERS: tuple[EncodedAdapter, ...] = ()
 

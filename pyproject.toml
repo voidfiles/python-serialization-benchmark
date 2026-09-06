@@ -12,6 +12,7 @@ dependencies = [
     "mashumaro==3.22",
     "msgspec==0.21.1",
     "pydantic==2.13.5",
+    "serpyco-rs==1.22.0",
 ]
 
 [project.scripts]

@@ -11,5 +11,6 @@ def test_primitive_registry_order() -> None:
         "mashumaro",
         "msgspec",
         "pydantic",
+        "serpyco-rs",
     ]
     assert encoded_adapters() == ()
