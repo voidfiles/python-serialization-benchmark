@@ -217,20 +217,21 @@ def _git_revision() -> str:
     return revision if completed.returncode == 0 and revision else "unknown"
 
 
-def _global_metadata() -> dict[str, str]:
+def _global_metadata(run_utc: str) -> dict[str, str]:
     return {
         "git_revision": _git_revision(),
         "benchmark_package_version": version("python-serialization-benchmark"),
         "gc_policy": "enabled",
-        "run_utc": datetime.now(timezone.utc).isoformat(),
+        "run_utc": run_utc,
     }
 
 
-def _build_parser() -> argparse.ArgumentParser:
+def _build_parser(run_utc: str) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m serialization_benchmark.runner")
     parser.add_argument("--tier", choices=("primitive", "encoded"), required=True)
     parser.add_argument("--adapter", action="append", default=[])
     parser.add_argument("--operation", action="append", default=[])
+    parser.add_argument("--run-utc", default=run_utc, help=argparse.SUPPRESS)
     return parser
 
 
@@ -240,6 +241,7 @@ def _add_cmdline_args(command: list[str], args: argparse.Namespace) -> None:
         command.extend(("--adapter", adapter))
     for operation in args.operation:
         command.extend(("--operation", operation))
+    command.extend(("--run-utc", args.run_utc))
 
 
 def _selected_adapters(
@@ -263,13 +265,15 @@ def _filter_cases(
 
 
 def main() -> int:
+    run_utc = datetime.now(timezone.utc).isoformat()
     runner = pyperf.Runner(
-        metadata=_global_metadata(),
+        metadata=_global_metadata(run_utc),
         program_args=("-m", "serialization_benchmark.runner"),
         add_cmdline_args=_add_cmdline_args,
-        _argparser=_build_parser(),
+        _argparser=_build_parser(run_utc),
     )
     args = runner.parse_args()
+    runner.metadata["run_utc"] = args.run_utc
     fixtures = make_fixtures()
 
     if args.tier == "primitive":
