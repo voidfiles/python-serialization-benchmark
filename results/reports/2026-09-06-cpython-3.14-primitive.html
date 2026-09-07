@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serialization benchmark results</title>
+<style>:root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+body { margin: 2rem; }
+main { margin: auto; max-width: 72rem; }
+nav { display: flex; gap: 1rem; margin-block: 1rem 2rem; }
+dl { display: grid; gap: 0.25rem 1rem; grid-template-columns: max-content 1fr; }
+dt { font-weight: 700; }
+dd { margin: 0; }
+section { margin-block: 2rem; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #888; padding: 0.5rem; text-align: left; }
+th { font-weight: 700; }
+</style>
+</head>
+<body>
+<main>
+<h1>Serialization benchmark results</h1>
+<nav aria-label="Benchmark reports"><a href="2026-09-06-cpython-3.14-primitive.html">Primitive results</a> <a href="2026-09-06-cpython-3.14-encoded.html">Encoded results</a></nav>
+<section><h2>Environment</h2><dl><dt>Python</dt><dd>3.14.6 (64-bit) (cpython)</dd>
+<dt>Platform</dt><dd>macOS-15.5-arm64-arm-64bit-Mach-O</dd>
+<dt>CPU model</dt><dd>Unknown</dd>
+<dt>CPU count</dt><dd>8</dd>
+<dt>Git revision</dt><dd>c1f0a332e358bd358330471aab22edad48e7b5d6</dd>
+<dt>Benchmark version</dt><dd>0.1.0</dd>
+<dt>GC policy</dt><dd>enabled</dd>
+<dt>Run UTC</dt><dd>2026-09-06T23:52:07.196571+00:00</dd>
+<dt>Unit</dt><dd>second</dd></dl></section>
+<section><h2>Primitive / dump_many / batch 100 / dataclass</h2><table><thead><tr><th scope="col">Adapter</th><th scope="col">Version</th><th scope="col">Mean</th><th scope="col">Std dev</th><th scope="col">Operations/s</th><th scope="col">Samples</th><th scope="col">Prerelease</th><th scope="col">Relative</th></tr></thead><tbody><tr><td>Adaptix 3.0 beta</td><td>3.0.0b12</td><td>439.163 µs</td><td>7.94279 µs</td><td>2277.06</td><td>120</td><td>pre-release</td><td>1.95x</td></tr>
+<tr><td>cattrs</td><td>26.2.0</td><td>265.086 µs</td><td>17.8319 µs</td><td>3772.37</td><td>120</td><td></td><td>1.18x</td></tr>
+<tr><td>dataclasses.asdict</td><td>3.14.6</td><td>1.58069 ms</td><td>34.9483 µs</td><td>632.635</td><td>120</td><td></td><td>7.01x</td></tr>
+<tr><td>Django REST Framework</td><td>3.18.0</td><td>4.27621 ms</td><td>1.4846 ms</td><td>233.852</td><td>120</td><td></td><td>18.96x</td></tr>
+<tr><td>Handwritten</td><td>3.14.6</td><td>225.51 µs</td><td>29.4488 µs</td><td>4434.38</td><td>120</td><td></td><td>1.00x</td></tr>
+<tr><td>Marshmallow</td><td>4.3.1</td><td>4.27899 ms</td><td>191.864 µs</td><td>233.7</td><td>120</td><td></td><td>18.97x</td></tr>
+<tr><td>mashumaro</td><td>3.22</td><td>214.802 µs</td><td>25.9163 µs</td><td>4655.44</td><td>120</td><td></td><td>0.95x</td></tr>
+<tr><td>msgspec</td><td>0.21.1</td><td>227.302 µs</td><td>21.6444 µs</td><td>4399.44</td><td>120</td><td></td><td>1.01x</td></tr>
+<tr><td>Pydantic v2</td><td>2.13.5</td><td>443.781 µs</td><td>21.1592 µs</td><td>2253.36</td><td>120</td><td></td><td>1.97x</td></tr>
+<tr><td>serpyco-rs</td><td>1.22.0</td><td>188.069 µs</td><td>27.3914 µs</td><td>5317.21</td><td>120</td><td></td><td>0.83x</td></tr></tbody></table></section>
+<section><h2>Primitive / dump_one / batch 1 / dataclass</h2><table><thead><tr><th scope="col">Adapter</th><th scope="col">Version</th><th scope="col">Mean</th><th scope="col">Std dev</th><th scope="col">Operations/s</th><th scope="col">Samples</th><th scope="col">Prerelease</th><th scope="col">Relative</th></tr></thead><tbody><tr><td>Adaptix 3.0 beta</td><td>3.0.0b12</td><td>4.17945 µs</td><td>915.259 ns</td><td>239266</td><td>120</td><td>pre-release</td><td>2.49x</td></tr>
+<tr><td>cattrs</td><td>26.2.0</td><td>2.59445 µs</td><td>253.287 ns</td><td>385438</td><td>120</td><td></td><td>1.55x</td></tr>
+<tr><td>dataclasses.asdict</td><td>3.14.6</td><td>15.6683 µs</td><td>446.838 ns</td><td>63823</td><td>120</td><td></td><td>9.35x</td></tr>
+<tr><td>Django REST Framework</td><td>3.18.0</td><td>32.3295 µs</td><td>1.70982 µs</td><td>30931.5</td><td>120</td><td></td><td>19.29x</td></tr>
+<tr><td>Handwritten</td><td>3.14.6</td><td>1.67576 µs</td><td>110.571 ns</td><td>596743</td><td>120</td><td></td><td>1.00x</td></tr>
+<tr><td>Marshmallow</td><td>4.3.1</td><td>43.6786 µs</td><td>2.13505 µs</td><td>22894.5</td><td>120</td><td></td><td>26.06x</td></tr>
+<tr><td>mashumaro</td><td>3.22</td><td>1.935 µs</td><td>380.173 ns</td><td>516796</td><td>120</td><td></td><td>1.15x</td></tr>
+<tr><td>msgspec</td><td>0.21.1</td><td>2.24358 µs</td><td>191.576 ns</td><td>445716</td><td>120</td><td></td><td>1.34x</td></tr>
+<tr><td>Pydantic v2</td><td>2.13.5</td><td>4.42625 µs</td><td>245.077 ns</td><td>225925</td><td>120</td><td></td><td>2.64x</td></tr>
+<tr><td>serpyco-rs</td><td>1.22.0</td><td>1.98842 µs</td><td>87.3978 ns</td><td>502912</td><td>120</td><td></td><td>1.19x</td></tr></tbody></table></section>
+<section><h2>Primitive / load_many / batch 100 / dataclass</h2><table><thead><tr><th scope="col">Adapter</th><th scope="col">Version</th><th scope="col">Mean</th><th scope="col">Std dev</th><th scope="col">Operations/s</th><th scope="col">Samples</th><th scope="col">Prerelease</th><th scope="col">Relative</th></tr></thead><tbody><tr><td>Adaptix 3.0 beta</td><td>3.0.0b12</td><td>790.846 µs</td><td>106.53 µs</td><td>1264.47</td><td>120</td><td>pre-release</td><td>1.14x</td></tr>
+<tr><td>cattrs</td><td>26.2.0</td><td>764.328 µs</td><td>54.2705 µs</td><td>1308.34</td><td>120</td><td></td><td>1.10x</td></tr>
+<tr><td>Django REST Framework</td><td>3.18.0</td><td>11.889 ms</td><td>1.7859 ms</td><td>84.1114</td><td>120</td><td></td><td>17.11x</td></tr>
+<tr><td>Handwritten</td><td>3.14.6</td><td>694.795 µs</td><td>50.2292 µs</td><td>1439.27</td><td>120</td><td></td><td>1.00x</td></tr>
+<tr><td>Marshmallow</td><td>4.3.1</td><td>12.5757 ms</td><td>843.322 µs</td><td>79.5183</td><td>120</td><td></td><td>18.10x</td></tr>
+<tr><td>mashumaro</td><td>3.22</td><td>593.117 µs</td><td>98.4218 µs</td><td>1686.01</td><td>120</td><td></td><td>0.85x</td></tr>
+<tr><td>msgspec</td><td>0.21.1</td><td>298.25 µs</td><td>7.48199 µs</td><td>3352.89</td><td>120</td><td></td><td>0.43x</td></tr>
+<tr><td>Pydantic v2</td><td>2.13.5</td><td>831.992 µs</td><td>68.676 µs</td><td>1201.93</td><td>120</td><td></td><td>1.20x</td></tr>
+<tr><td>serpyco-rs</td><td>1.22.0</td><td>200.466 µs</td><td>10.569 µs</td><td>4988.39</td><td>120</td><td></td><td>0.29x</td></tr></tbody></table></section>
+<section><h2>Primitive / load_one / batch 1 / dataclass</h2><table><thead><tr><th scope="col">Adapter</th><th scope="col">Version</th><th scope="col">Mean</th><th scope="col">Std dev</th><th scope="col">Operations/s</th><th scope="col">Samples</th><th scope="col">Prerelease</th><th scope="col">Relative</th></tr></thead><tbody><tr><td>Adaptix 3.0 beta</td><td>3.0.0b12</td><td>7.76072 µs</td><td>638.458 ns</td><td>128854</td><td>120</td><td>pre-release</td><td>1.07x</td></tr>
+<tr><td>cattrs</td><td>26.2.0</td><td>7.7153 µs</td><td>674.302 ns</td><td>129613</td><td>120</td><td></td><td>1.06x</td></tr>
+<tr><td>Django REST Framework</td><td>3.18.0</td><td>100.17 µs</td><td>10.1489 µs</td><td>9982.99</td><td>120</td><td></td><td>13.80x</td></tr>
+<tr><td>Handwritten</td><td>3.14.6</td><td>7.25778 µs</td><td>545.316 ns</td><td>137783</td><td>120</td><td></td><td>1.00x</td></tr>
+<tr><td>Marshmallow</td><td>4.3.1</td><td>138.542 µs</td><td>15.4791 µs</td><td>7218.04</td><td>120</td><td></td><td>19.09x</td></tr>
+<tr><td>mashumaro</td><td>3.22</td><td>5.6142 µs</td><td>1.57771 µs</td><td>178120</td><td>120</td><td></td><td>0.77x</td></tr>
+<tr><td>msgspec</td><td>0.21.1</td><td>3.43216 µs</td><td>201.392 ns</td><td>291362</td><td>120</td><td></td><td>0.47x</td></tr>
+<tr><td>Pydantic v2</td><td>2.13.5</td><td>5.49104 µs</td><td>289.611 ns</td><td>182115</td><td>120</td><td></td><td>0.76x</td></tr>
+<tr><td>serpyco-rs</td><td>1.22.0</td><td>2.10289 µs</td><td>117.729 ns</td><td>475536</td><td>120</td><td></td><td>0.29x</td></tr></tbody></table></section>
+</main>
+</body>
+</html>

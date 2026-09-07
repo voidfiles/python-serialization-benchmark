@@ -34,6 +34,12 @@ All adapters use the same canonical stdlib dataclasses and deterministic fixture
 
 Correctness is a gate, not an assumption. Before timing an adapter, the runner validates exact primitive output or normalized round trips, batch order and cardinality, encoded return types, and deterministic payload lengths. Garbage collection remains enabled and is recorded in the raw metadata. `pyperf` controls processes, warmups, loop calibration, and environment metadata. Encoded reports include payload sizes alongside timing data.
 
+## Canonical results
+
+The versioned 2026-09-06 snapshot is available as separate [primitive](results/reports/2026-09-06-cpython-3.14-primitive.md) and [encoded](results/reports/2026-09-06-cpython-3.14-encoded.md) reports. These are machine-specific measurements, not a portable performance baseline.
+
+The snapshot used CPython 3.14.6 (64-bit) on macOS 15.5, arm64, with an Apple M2 CPU (8 cores: 4 performance and 4 efficiency). Garbage collection was enabled. The primitive suite ran at `2026-09-06T23:52:07.196571+00:00` from revision `c1f0a332e358bd358330471aab22edad48e7b5d6`; the encoded suite ran at `2026-09-07T01:23:12.085278+00:00` from revision `10de3a659951cd6ce359a41b47c93db48ec675d1`.
+
 ## Install and validate
 
 Python 3.12, 3.13, and 3.14 are supported. Python 3.14 is the canonical benchmark runtime.
