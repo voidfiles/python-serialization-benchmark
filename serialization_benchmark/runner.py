@@ -139,7 +139,18 @@ def build_encoded_cases(
     many = list(fixtures.many)
 
     for adapter in selected_adapters:
+        one_payload = (
+            adapter.encode_one(one)
+            if {"encode_one", "decode_one"} & adapter.operations
+            else None
+        )
+        many_payload = (
+            adapter.encode_many(many)
+            if {"encode_many", "decode_many"} & adapter.operations
+            else None
+        )
         if "encode_one" in adapter.operations:
+            assert one_payload is not None
             cases.append(
                 BenchmarkCase(
                     _case_name(adapter, "encoded", "encode_one"),
@@ -150,26 +161,28 @@ def build_encoded_cases(
                         operation="encode_one",
                         batch_size=1,
                         encoded_format=adapter.format,
+                        payload_bytes=len(one_payload),
                     ),
                 )
             )
         if "decode_one" in adapter.operations:
-            encoded_one = adapter.encode_one(one)
+            assert one_payload is not None
             cases.append(
                 BenchmarkCase(
                     _case_name(adapter, "encoded", "decode_one"),
-                    partial(adapter.decode_one, encoded_one),
+                    partial(adapter.decode_one, one_payload),
                     _case_metadata(
                         adapter,
                         tier="encoded",
                         operation="decode_one",
                         batch_size=1,
                         encoded_format=adapter.format,
-                        payload_bytes=len(encoded_one),
+                        payload_bytes=len(one_payload),
                     ),
                 )
             )
         if "encode_many" in adapter.operations:
+            assert many_payload is not None
             cases.append(
                 BenchmarkCase(
                     _case_name(adapter, "encoded", "encode_many"),
@@ -180,22 +193,23 @@ def build_encoded_cases(
                         operation="encode_many",
                         batch_size=len(many),
                         encoded_format=adapter.format,
+                        payload_bytes=len(many_payload),
                     ),
                 )
             )
         if "decode_many" in adapter.operations:
-            encoded_many = adapter.encode_many(many)
+            assert many_payload is not None
             cases.append(
                 BenchmarkCase(
                     _case_name(adapter, "encoded", "decode_many"),
-                    partial(adapter.decode_many, encoded_many),
+                    partial(adapter.decode_many, many_payload),
                     _case_metadata(
                         adapter,
                         tier="encoded",
                         operation="decode_many",
                         batch_size=len(many),
                         encoded_format=adapter.format,
-                        payload_bytes=len(encoded_many),
+                        payload_bytes=len(many_payload),
                     ),
                 )
             )

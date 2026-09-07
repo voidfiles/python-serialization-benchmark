@@ -22,17 +22,18 @@ def test_primitive_cases_are_partitioned_by_operation() -> None:
     assert all(case.metadata["gc"] == "enabled" for case in cases)
 
 
-def test_encoded_decode_cases_include_prepared_payload_size() -> None:
+def test_all_encoded_cases_include_their_prepared_payload_size() -> None:
     cases = build_encoded_cases(make_fixtures())
 
-    decode_cases = [
-        case
-        for case in cases
-        if case.metadata["format"] == "json"
-        and case.metadata["operation"] in {"decode_one", "decode_many"}
-    ]
+    assert all(type(case.metadata["payload_bytes"]) is int for case in cases)
+    assert all(case.metadata["payload_bytes"] > 0 for case in cases)
 
-    assert len(decode_cases) == 12
-    assert all(case.metadata["format"] == "json" for case in decode_cases)
-    assert all(type(case.metadata["payload_bytes"]) is int for case in decode_cases)
-    assert all(case.metadata["payload_bytes"] > 0 for case in decode_cases)
+    cases_by_name = {case.name: case for case in cases}
+    assert cases_by_name["encoded.encode_one.stdlib-json.dataclass"].metadata[
+        "payload_bytes"
+    ] == cases_by_name["encoded.decode_one.stdlib-json.dataclass"].metadata["payload_bytes"]
+    assert cases_by_name["encoded.encode_many.stdlib-json.dataclass"].metadata[
+        "payload_bytes"
+    ] == cases_by_name["encoded.decode_many.stdlib-json.dataclass"].metadata[
+        "payload_bytes"
+    ]
