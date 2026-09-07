@@ -38,7 +38,9 @@ Correctness is a gate, not an assumption. Before timing an adapter, the runner v
 
 The versioned 2026-09-06 snapshot is available as separate [primitive](results/reports/2026-09-06-cpython-3.14-primitive.md) and [encoded](results/reports/2026-09-06-cpython-3.14-encoded.md) reports. These are machine-specific measurements, not a portable performance baseline.
 
-The snapshot used CPython 3.14.6 (64-bit) on macOS 15.5, arm64, with an Apple M2 CPU (8 cores: 4 performance and 4 efficiency). Garbage collection was enabled. The primitive suite ran at `2026-09-06T23:52:07.196571+00:00` from revision `c1f0a332e358bd358330471aab22edad48e7b5d6`; the encoded suite ran at `2026-09-07T01:23:12.085278+00:00` from revision `10de3a659951cd6ce359a41b47c93db48ec675d1`.
+> **Comparison warning:** Results from different machines or runs are not directly comparable. `pyperf` flagged 37 of 38 primitive benchmarks and 44 of 48 encoded benchmarks as potentially unstable. This snapshot is noisy and should not be used for close comparisons.
+
+The snapshot used CPython 3.14.6 (64-bit) on macOS 15.5, arm64, with an Apple M2 CPU (8 cores: 4 performance and 4 efficiency). Garbage collection was enabled. The primitive suite ran at `2026-09-06T23:52:07.196571+00:00` from revision `c1f0a332e358bd358330471aab22edad48e7b5d6`; the encoded suite ran at `2026-09-07T03:03:35.663136+00:00` from revision `5ccf7af2957171180b5dc7aedeea5bb9a95d925e`.
 
 ## Install and validate
 
@@ -89,7 +91,7 @@ docker compose run --rm encoded
 
 ## Interpreting results
 
-Compare rows only within the same tier, format, operation, batch size, and model strategy. Relative values are meaningful only against the baseline in that table. Measurements from different machines are not directly comparable, including results from different hosted CI runners.
+Compare rows only within the same tier, format, operation, batch size, and model strategy. Speed-vs-baseline values are meaningful only against the baseline in that table, and higher values mean faster operations. Measurements from different machines or runs are not directly comparable, including results from different hosted CI runners.
 
 ## Pickle safety
 
