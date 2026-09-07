@@ -105,6 +105,52 @@ def test_report_command_writes_partitioned_artifacts(tmp_path: Path) -> None:
     assert html.read_text().count("<table") == 2
 
 
+@pytest.mark.parametrize(
+    ("html_name", "primitive_href", "encoded_href"),
+    [
+        ("index.html", "index.html", "encoded.html"),
+        ("encoded.html", "index.html", "encoded.html"),
+        (
+            "2026-09-06-cpython-3.14-primitive.html",
+            "2026-09-06-cpython-3.14-primitive.html",
+            "2026-09-06-cpython-3.14-encoded.html",
+        ),
+        (
+            "2026-09-06-cpython-3.14-encoded.html",
+            "2026-09-06-cpython-3.14-primitive.html",
+            "2026-09-06-cpython-3.14-encoded.html",
+        ),
+    ],
+)
+def test_report_command_links_to_sibling_report_names(
+    tmp_path: Path,
+    html_name: str,
+    primitive_href: str,
+    encoded_href: str,
+) -> None:
+    html = tmp_path / html_name
+
+    completed = subprocess.run(
+        [
+            "serialization-benchmark",
+            "report",
+            "tests/fixtures/pyperf-smoke.json",
+            "--markdown",
+            str(tmp_path / "report.md"),
+            "--html",
+            str(html),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    contents = html.read_text()
+    assert f'href="{primitive_href}">Primitive results</a>' in contents
+    assert f'href="{encoded_href}">Encoded results</a>' in contents
+
+
 @pytest.mark.parametrize("contents", ['{"version": "1.0"}', "[]"])
 def test_report_command_handles_structurally_invalid_pyperf_json(
     tmp_path: Path,

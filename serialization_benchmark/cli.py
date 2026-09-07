@@ -63,8 +63,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             parser.error("unrecognized arguments: " + " ".join(pyperf_args))
         try:
             report = load_report(args.raw_json)
+            primitive_href, encoded_href = _html_report_hrefs(args.html)
             _write_text_atomically(args.markdown, render_markdown(report))
-            _write_text_atomically(args.html, render_html(report))
+            _write_text_atomically(
+                args.html,
+                render_html(
+                    report,
+                    primitive_href=primitive_href,
+                    encoded_href=encoded_href,
+                ),
+            )
         except ReportError as error:
             print(f"report failed: {error}", file=sys.stderr)
             return 1
@@ -72,6 +80,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     if pyperf_args:
         parser.error("unrecognized arguments: " + " ".join(pyperf_args))
     raise AssertionError(f"unsupported command: {args.command}")
+
+
+def _html_report_hrefs(path: Path) -> tuple[str, str]:
+    primitive_suffix = "-primitive.html"
+    encoded_suffix = "-encoded.html"
+    if path.name.endswith(primitive_suffix):
+        prefix = path.name.removesuffix(primitive_suffix)
+    elif path.name.endswith(encoded_suffix):
+        prefix = path.name.removesuffix(encoded_suffix)
+    else:
+        return "index.html", "encoded.html"
+    return f"{prefix}{primitive_suffix}", f"{prefix}{encoded_suffix}"
 
 
 def _write_text_atomically(path: Path, contents: str) -> None:

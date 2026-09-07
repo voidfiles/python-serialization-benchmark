@@ -88,7 +88,12 @@ def render_markdown(report: BenchmarkReport) -> str:
     return "\n".join(lines) + "\n"
 
 
-def render_html(report: BenchmarkReport) -> str:
+def render_html(
+    report: BenchmarkReport,
+    *,
+    primitive_href: str = "index.html",
+    encoded_href: str = "encoded.html",
+) -> str:
     environment = "\n".join(
         f"<dt>{escape(label)}</dt><dd>{escape(value)}</dd>"
         for label, value in _environment_rows(report.metadata)
@@ -106,7 +111,7 @@ def render_html(report: BenchmarkReport) -> str:
 <body>
 <main>
 <h1>Serialization benchmark results</h1>
-<nav aria-label="Benchmark reports"><a href="index.html">Primitive results</a> <a href="encoded.html">Encoded results</a></nav>
+<nav aria-label="Benchmark reports"><a href="{escape(primitive_href, quote=True)}">Primitive results</a> <a href="{escape(encoded_href, quote=True)}">Encoded results</a></nav>
 <section><h2>Environment</h2><dl>{environment}</dl></section>
 {sections}
 </main>
