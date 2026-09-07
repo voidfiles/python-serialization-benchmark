@@ -29,11 +29,31 @@ def test_all_encoded_cases_include_their_prepared_payload_size() -> None:
     assert all(case.metadata["payload_bytes"] > 0 for case in cases)
 
     cases_by_name = {case.name: case for case in cases}
-    assert cases_by_name["encoded.encode_one.stdlib-json.dataclass"].metadata[
+    assert cases_by_name["encoded.json.encode_one.stdlib-json.dataclass"].metadata[
         "payload_bytes"
-    ] == cases_by_name["encoded.decode_one.stdlib-json.dataclass"].metadata["payload_bytes"]
-    assert cases_by_name["encoded.encode_many.stdlib-json.dataclass"].metadata[
-        "payload_bytes"
-    ] == cases_by_name["encoded.decode_many.stdlib-json.dataclass"].metadata[
+    ] == cases_by_name["encoded.json.decode_one.stdlib-json.dataclass"].metadata[
         "payload_bytes"
     ]
+    assert cases_by_name["encoded.json.encode_many.stdlib-json.dataclass"].metadata[
+        "payload_bytes"
+    ] == cases_by_name["encoded.json.decode_many.stdlib-json.dataclass"].metadata[
+        "payload_bytes"
+    ]
+
+
+def test_all_encoded_case_names_include_their_format() -> None:
+    cases = build_encoded_cases(make_fixtures())
+
+    assert all(
+        case.name
+        == ".".join(
+            (
+                "encoded",
+                str(case.metadata["format"]),
+                str(case.metadata["operation"]),
+                str(case.metadata["adapter_slug"]),
+                str(case.metadata["model_strategy"]),
+            )
+        )
+        for case in cases
+    )

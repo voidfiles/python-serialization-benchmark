@@ -44,6 +44,10 @@ def test_run_command_writes_selected_primitive_benchmark(tmp_path: Path) -> None
 
     assert completed.returncode == 0, completed.stderr
     assert output.exists()
+    raw_result = output.read_text()
+    assert '"hostname"' not in raw_result
+    assert '"python_executable"' not in raw_result
+    assert Path(__file__).parents[1].as_posix() not in raw_result
 
 
 def test_run_command_retains_common_run_timestamp_across_workers(
@@ -177,3 +181,30 @@ def test_report_command_handles_structurally_invalid_pyperf_json(
     assert completed.returncode == 1
     assert completed.stderr.startswith("report failed:")
     assert "Traceback" not in completed.stderr
+
+
+@pytest.mark.parametrize(
+    "arguments",
+    [
+        ["validate", "--unknown"],
+        [
+            "report",
+            "tests/fixtures/pyperf-smoke.json",
+            "--markdown",
+            "unused.md",
+            "--html",
+            "unused.html",
+            "--unknown",
+        ],
+    ],
+)
+def test_non_run_commands_reject_unknown_arguments(arguments: list[str]) -> None:
+    completed = subprocess.run(
+        ["serialization-benchmark", *arguments],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 2
+    assert "unrecognized arguments: --unknown" in completed.stderr

@@ -7,6 +7,7 @@ import tempfile
 from collections.abc import Sequence
 from pathlib import Path
 
+from serialization_benchmark.publication import RawResultPublicationError, sanitize_raw_result
 from serialization_benchmark.registry import encoded_adapters, primitive_adapters
 from serialization_benchmark.reporting import ReportError, load_report, render_html, render_markdown
 from serialization_benchmark.validation import validate_all
@@ -31,6 +32,8 @@ def _build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser()
     args, pyperf_args = parser.parse_known_args(argv)
+    if args.command != "run" and pyperf_args:
+        parser.error("unrecognized arguments: " + " ".join(pyperf_args))
     if args.command == "validate":
         validate_all()
         print(
@@ -57,10 +60,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             command.extend(("--operation", operation))
         command.extend(pyperf_args[1:])
         completed = subprocess.run(command, check=False)
-        return completed.returncode
+        if completed.returncode:
+            return completed.returncode
+        try:
+            sanitize_raw_result(args.output)
+        except RawResultPublicationError as error:
+            print(f"raw result publication failed: {error}", file=sys.stderr)
+            return 1
+        return 0
     if args.command == "report":
-        if pyperf_args:
-            parser.error("unrecognized arguments: " + " ".join(pyperf_args))
         try:
             report = load_report(args.raw_json)
             primitive_href, encoded_href = _html_report_hrefs(args.html)
@@ -77,8 +85,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"report failed: {error}", file=sys.stderr)
             return 1
         return 0
-    if pyperf_args:
-        parser.error("unrecognized arguments: " + " ".join(pyperf_args))
     raise AssertionError(f"unsupported command: {args.command}")
 
 

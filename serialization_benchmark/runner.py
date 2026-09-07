@@ -58,8 +58,17 @@ def _case_metadata(
     return metadata
 
 
-def _case_name(adapter: PrimitiveAdapter | EncodedAdapter, tier: str, operation: str) -> str:
-    return ".".join((tier, operation, adapter.metadata.slug, adapter.metadata.model_strategy))
+def _case_name(
+    adapter: PrimitiveAdapter | EncodedAdapter,
+    tier: str,
+    operation: str,
+    encoded_format: str = "",
+) -> str:
+    parts = [tier]
+    if encoded_format:
+        parts.append(encoded_format)
+    parts.extend((operation, adapter.metadata.slug, adapter.metadata.model_strategy))
+    return ".".join(parts)
 
 
 def build_primitive_cases(
@@ -153,7 +162,7 @@ def build_encoded_cases(
             assert one_payload is not None
             cases.append(
                 BenchmarkCase(
-                    _case_name(adapter, "encoded", "encode_one"),
+                    _case_name(adapter, "encoded", "encode_one", adapter.format),
                     partial(adapter.encode_one, one),
                     _case_metadata(
                         adapter,
@@ -169,7 +178,7 @@ def build_encoded_cases(
             assert one_payload is not None
             cases.append(
                 BenchmarkCase(
-                    _case_name(adapter, "encoded", "decode_one"),
+                    _case_name(adapter, "encoded", "decode_one", adapter.format),
                     partial(adapter.decode_one, one_payload),
                     _case_metadata(
                         adapter,
@@ -185,7 +194,7 @@ def build_encoded_cases(
             assert many_payload is not None
             cases.append(
                 BenchmarkCase(
-                    _case_name(adapter, "encoded", "encode_many"),
+                    _case_name(adapter, "encoded", "encode_many", adapter.format),
                     partial(adapter.encode_many, many),
                     _case_metadata(
                         adapter,
@@ -201,7 +210,7 @@ def build_encoded_cases(
             assert many_payload is not None
             cases.append(
                 BenchmarkCase(
-                    _case_name(adapter, "encoded", "decode_many"),
+                    _case_name(adapter, "encoded", "decode_many", adapter.format),
                     partial(adapter.decode_many, many_payload),
                     _case_metadata(
                         adapter,

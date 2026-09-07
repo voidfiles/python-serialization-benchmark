@@ -8,6 +8,13 @@ from pathlib import Path
 from typing import TypeAlias
 
 import pyperf
+from pyperf._cli import format_checks
+
+from serialization_benchmark.contracts import (
+    ALL_ENCODED_FORMATS,
+    ALL_ENCODED_OPERATIONS,
+    ALL_PRIMITIVE_OPERATIONS,
+)
 
 
 MetadataValue: TypeAlias = str | int | float | bool
@@ -39,6 +46,12 @@ class ResultRow:
 class BenchmarkReport:
     rows: tuple[ResultRow, ...]
     metadata: dict[str, MetadataValue]
+    unstable_benchmark_count: int
+    benchmark_count: int
+
+
+_UNSTABLE_WARNING = "WARNING: the benchmark result may be unstable"
+_SPEED_HEADER = "Speed vs baseline (higher is faster)"
 
 
 def load_report(path: Path) -> BenchmarkReport:
@@ -50,17 +63,24 @@ def load_report(path: Path) -> BenchmarkReport:
     suite_metadata = suite.get_metadata()
     _validate_suite_metadata(suite_metadata)
     rows: list[ResultRow] = []
+    unstable_benchmark_count = 0
     for benchmark in suite.get_benchmarks():
         metadata = benchmark.get_metadata()
         benchmark_name = benchmark.get_name()
+        tier, encoded_format, operation, batch_size, payload_bytes = _validate_row_metadata(
+            metadata,
+            benchmark_name,
+        )
         mean = benchmark.mean()
         sample_count = benchmark.get_nvalue()
+        if _UNSTABLE_WARNING in format_checks(benchmark):
+            unstable_benchmark_count += 1
         rows.append(
             ResultRow(
-                tier=_required_str(metadata, "tier", benchmark_name),
-                format=_optional_str(metadata, "format", benchmark_name) or "",
-                operation=_required_str(metadata, "operation", benchmark_name),
-                batch_size=_required_int(metadata, "batch_size", benchmark_name),
+                tier=tier,
+                format=encoded_format,
+                operation=operation,
+                batch_size=batch_size,
                 adapter_slug=_required_str(metadata, "adapter_slug", benchmark_name),
                 adapter_name=_required_str(metadata, "adapter_name", benchmark_name),
                 library_version=_required_str(metadata, "library_version", benchmark_name),
@@ -70,17 +90,26 @@ def load_report(path: Path) -> BenchmarkReport:
                 stdev_seconds=benchmark.stdev() if sample_count > 1 else 0.0,
                 operations_per_second=1.0 / mean,
                 samples=sample_count,
-                payload_bytes=_optional_int(metadata, "payload_bytes", benchmark_name),
+                payload_bytes=payload_bytes,
             )
         )
     return BenchmarkReport(
         rows=tuple(sorted(rows, key=_result_sort_key)),
         metadata=_narrow_metadata(suite_metadata),
+        unstable_benchmark_count=unstable_benchmark_count,
+        benchmark_count=len(rows),
     )
 
 
 def render_markdown(report: BenchmarkReport) -> str:
-    lines = ["# Serialization benchmark results", "", "## Environment", ""]
+    lines = [
+        "# Serialization benchmark results",
+        "",
+        f"> **Comparison warning:** {_comparison_warning(report)}",
+        "",
+        "## Environment",
+        "",
+    ]
     lines.extend(f"- {label}: {_markdown(value)}" for label, value in _environment_rows(report.metadata))
     for group_key, rows in _groups(report.rows):
         lines.extend(("", f"## {_group_title(group_key)}", ""))
@@ -112,12 +141,77 @@ def render_html(
 <main>
 <h1>Serialization benchmark results</h1>
 <nav aria-label="Benchmark reports"><a href="{escape(primitive_href, quote=True)}">Primitive results</a> <a href="{escape(encoded_href, quote=True)}">Encoded results</a></nav>
+<aside class="warning" role="note"><h2>Comparison warning</h2><p>{escape(_comparison_warning(report))}</p></aside>
 <section><h2>Environment</h2><dl>{environment}</dl></section>
 {sections}
 </main>
 </body>
 </html>
 """
+
+
+def _comparison_warning(report: BenchmarkReport) -> str:
+    warning = (
+        "Results from different machines or runs are not directly comparable. "
+        f"pyperf flagged {report.unstable_benchmark_count} of "
+        f"{report.benchmark_count} benchmarks as potentially unstable."
+    )
+    if report.unstable_benchmark_count:
+        warning += " This noisy run should not be used for close comparisons."
+    return warning
+
+
+def _validate_row_metadata(
+    metadata: dict[str, object],
+    benchmark: str,
+) -> tuple[str, str, str, int, int | None]:
+    tier = _required_str(metadata, "tier", benchmark)
+    operation = _required_str(metadata, "operation", benchmark)
+    batch_size = _required_positive_int(metadata, "batch_size", benchmark)
+    adapter_slug = _required_str(metadata, "adapter_slug", benchmark)
+    model_strategy = _required_str(metadata, "model_strategy", benchmark)
+
+    if "encoded_format" in metadata:
+        raise ReportError(
+            f"benchmark {benchmark!r} uses noncanonical metadata 'encoded_format'; use 'format'"
+        )
+
+    if tier == "primitive":
+        if operation not in ALL_PRIMITIVE_OPERATIONS:
+            raise ReportError(
+                f"benchmark {benchmark!r} has invalid primitive operation metadata {operation!r}"
+            )
+        if "format" in metadata:
+            raise ReportError(f"primitive benchmark {benchmark!r} must not define metadata 'format'")
+        if "payload_bytes" in metadata:
+            raise ReportError(
+                f"primitive benchmark {benchmark!r} must not define metadata 'payload_bytes'"
+            )
+        encoded_format = ""
+        payload_bytes = None
+        expected_name = ".".join((tier, operation, adapter_slug, model_strategy))
+    elif tier == "encoded":
+        encoded_format = _required_str(metadata, "format", benchmark)
+        if encoded_format not in ALL_ENCODED_FORMATS:
+            raise ReportError(
+                f"benchmark {benchmark!r} has invalid encoded format metadata {encoded_format!r}"
+            )
+        if operation not in ALL_ENCODED_OPERATIONS:
+            raise ReportError(
+                f"benchmark {benchmark!r} has invalid encoded operation metadata {operation!r}"
+            )
+        payload_bytes = _required_positive_int(metadata, "payload_bytes", benchmark)
+        expected_name = ".".join(
+            (tier, encoded_format, operation, adapter_slug, model_strategy)
+        )
+    else:
+        raise ReportError(f"benchmark {benchmark!r} has invalid tier metadata {tier!r}")
+
+    if benchmark != expected_name:
+        raise ReportError(
+            f"benchmark name {benchmark!r} is inconsistent with metadata; expected {expected_name!r}"
+        )
+    return tier, encoded_format, operation, batch_size, payload_bytes
 
 
 def _required_str(metadata: dict[str, object], key: str, benchmark: str) -> str:
@@ -127,12 +221,6 @@ def _required_str(metadata: dict[str, object], key: str, benchmark: str) -> str:
     return value
 
 
-def _optional_str(metadata: dict[str, object], key: str, benchmark: str) -> str | None:
-    if key not in metadata:
-        return None
-    return _required_str(metadata, key, benchmark)
-
-
 def _required_int(metadata: dict[str, object], key: str, benchmark: str) -> int:
     value = metadata.get(key)
     if type(value) is not int:
@@ -140,10 +228,11 @@ def _required_int(metadata: dict[str, object], key: str, benchmark: str) -> int:
     return value
 
 
-def _optional_int(metadata: dict[str, object], key: str, benchmark: str) -> int | None:
-    if key not in metadata:
-        return None
-    return _required_int(metadata, key, benchmark)
+def _required_positive_int(metadata: dict[str, object], key: str, benchmark: str) -> int:
+    value = _required_int(metadata, key, benchmark)
+    if value <= 0:
+        raise ReportError(f"benchmark {benchmark!r} has nonpositive metadata {key!r}")
+    return value
 
 
 def _required_prerelease(metadata: dict[str, object], benchmark: str) -> bool:
@@ -267,7 +356,7 @@ def _markdown_table(key: GroupKey, rows: tuple[ResultRow, ...]) -> list[str]:
     if key[0] == "encoded":
         headers.append("Payload")
     if has_relative:
-        headers.append("Relative")
+        headers.append(_SPEED_HEADER)
     baseline = _baseline(key, rows)
     lines = ["| " + " | ".join(headers) + " |", "| " + " | ".join("---" for _ in headers) + " |"]
     for row in rows:
@@ -282,7 +371,7 @@ def _html_table(key: GroupKey, rows: tuple[ResultRow, ...]) -> str:
     if key[0] == "encoded":
         headers.append("Payload")
     if baseline is not None:
-        headers.append("Relative")
+        headers.append(_SPEED_HEADER)
     header_html = "".join(f"<th scope=\"col\">{escape(header)}</th>" for header in headers)
     rows_html = "\n".join(
         "<tr>" + "".join(f"<td>{escape(value)}</td>" for value in _table_values(row, baseline, key[0] == "encoded")) + "</tr>"
@@ -312,7 +401,7 @@ def _table_values(row: ResultRow, baseline: ResultRow | None, encoded: bool) -> 
     if encoded:
         values.append(_format_bytes(row.payload_bytes))
     if baseline is not None:
-        values.append(f"{row.mean_seconds / baseline.mean_seconds:.2f}x")
+        values.append(f"{baseline.mean_seconds / row.mean_seconds:.2f}x")
     return values
 
 

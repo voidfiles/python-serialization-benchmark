@@ -20,6 +20,9 @@ ALL_PRIMITIVE_OPERATIONS: frozenset[PrimitiveOperation] = frozenset(
 ALL_ENCODED_OPERATIONS: frozenset[EncodedOperation] = frozenset(
     {"encode_one", "decode_one", "encode_many", "decode_many"}
 )
+ALL_ENCODED_FORMATS: frozenset[EncodedFormat] = frozenset(
+    {"json", "messagepack", "avro", "pickle"}
+)
 
 
 @dataclass(frozen=True)

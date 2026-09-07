@@ -2,6 +2,9 @@
 body { margin: 2rem; }
 main { margin: auto; max-width: 72rem; }
 nav { display: flex; gap: 1rem; margin-block: 1rem 2rem; }
+.warning { border-left: 0.3rem solid #c47f00; margin: 1.5rem 0; padding: 0.25rem 1rem; }
+.warning h2 { margin-bottom: 0.25rem; }
+.warning p { margin-top: 0; }
 dl { display: grid; gap: 0.25rem 1rem; grid-template-columns: max-content 1fr; }
 dt { font-weight: 700; }
 dd { margin: 0; }
