@@ -36,11 +36,11 @@ Correctness is a gate, not an assumption. Before timing an adapter, the runner v
 
 ## Canonical results
 
-The versioned 2026-09-06 snapshot is available as separate [primitive](results/reports/2026-09-06-cpython-3.14-primitive.md) and [encoded](results/reports/2026-09-06-cpython-3.14-encoded.md) reports. These are machine-specific measurements, not a portable performance baseline.
+The versioned 2026-09-13 snapshot is available as separate [primitive](results/reports/2026-09-13-cpython-3.14-primitive.md) and [encoded](results/reports/2026-09-13-cpython-3.14-encoded.md) reports. These are machine-specific measurements, not a portable performance baseline.
 
-> **Comparison warning:** Results from different machines or runs are not directly comparable. `pyperf` flagged 37 of 38 primitive benchmarks and 44 of 48 encoded benchmarks as potentially unstable. This snapshot is noisy and should not be used for close comparisons.
+> **Comparison warning:** Results from different machines or runs are not directly comparable. `pyperf` flagged 37 of 38 primitive benchmarks and 47 of 48 encoded benchmarks as potentially unstable. This snapshot is noisy and should not be used for close comparisons.
 
-The snapshot used CPython 3.14.6 (64-bit) on macOS 15.5, arm64, with an Apple M2 CPU (8 cores: 4 performance and 4 efficiency). Garbage collection was enabled. The primitive suite ran at `2026-09-06T23:52:07.196571+00:00` from revision `c1f0a332e358bd358330471aab22edad48e7b5d6`; the encoded suite ran at `2026-09-07T03:03:35.663136+00:00` from revision `5ccf7af2957171180b5dc7aedeea5bb9a95d925e`.
+The snapshot used CPython 3.14.6 (64-bit) on macOS 15.5, arm64, with an Apple M2 CPU (8 cores: 4 performance and 4 efficiency). Garbage collection was enabled. The primitive suite ran at `2026-09-13T19:13:09.778895+00:00`; the encoded suite ran at `2026-09-13T19:45:06.276547+00:00`. Both suites ran from revision `354bbe98fd7fb4a4c22d21509a430bb1931ef752`.
 
 ## Install and validate
 

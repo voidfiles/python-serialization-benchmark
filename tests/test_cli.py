@@ -1,3 +1,4 @@
+import os
 import subprocess
 from pathlib import Path
 
@@ -80,6 +81,46 @@ def test_run_command_retains_common_run_timestamp_across_workers(
 
     assert completed.returncode == 0, completed.stderr
     assert pyperf.Benchmark.load(str(output)).get_metadata()["run_utc"]
+
+
+def test_run_command_tolerates_worker_hostname_changes(tmp_path: Path) -> None:
+    output = tmp_path / "primitive.json"
+    sitecustomize = tmp_path / "sitecustomize.py"
+    sitecustomize.write_text(
+        "import os\n"
+        "import socket\n"
+        "socket.gethostname = lambda: str(os.getpid())\n"
+    )
+    environment = os.environ.copy()
+    environment["PYTHONPATH"] = str(tmp_path)
+
+    completed = subprocess.run(
+        [
+            "serialization-benchmark",
+            "run",
+            "primitive",
+            "--output",
+            str(output),
+            "--adapter",
+            "handwritten",
+            "--operation",
+            "dump_one",
+            "--",
+            "--processes=2",
+            "--values=1",
+            "--warmups=1",
+            "--loops=1",
+            "--inherit-environ=PYTHONPATH",
+            "--quiet",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=environment,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert output.exists()
 
 
 def test_report_command_writes_partitioned_artifacts(tmp_path: Path) -> None:
