@@ -1,54 +1,102 @@
 # Python Serialization Benchmark
 
-This [repository](http://github.com/voidfiles/python-serialization-benchmark) maintains a set of benchmarks for python serialization frameworks.
+This project measures maintained Python serialization libraries at equivalent abstraction levels. Every selected adapter must pass exact semantic validation before it can be timed.
 
-You can find the latest benchmarks on [this page](https://voidfiles.github.io/python-serialization-benchmark/).
+## What is compared
 
-Currently the following projects are benchmarked.
+The primitive tier measures conversion between canonical stdlib dataclass instances and JSON-compatible Python values. It includes:
 
-* [Django REST Framework](http://www.django-rest-framework.org/)
-* [serpy](http://serpy.readthedocs.io/)
-* [Marshmallow](https://marshmallow.readthedocs.io/en/latest/)
-* [Strainer](https://github.com/voidfiles/strainer)
-* [Lollipop](http://lollipop.readthedocs.io/en/latest/)
-* [Kim](http://kim.readthedocs.io/en/latest/)
-* [Toasted Marshmallow](https://github.com/lyft/toasted-marshmallow)
-* [Colander](https://docs.pylonsproject.org/projects/colander/en/latest/)
-* [Lima](https://github.com/b6d/lima/)
-- [Serpyco](https://gitlab.com/sgrignard/serpyco)
-* [Avro](https://avro.apache.org/)
+- Handwritten conversion
+- `dataclasses.asdict` (dump only)
+- Marshmallow
+- Django REST Framework
+- cattrs
+- mashumaro
+- msgspec
+- Pydantic v2
+- serpyco-rs
+- Adaptix 3.0 beta (prerelease)
 
-Along with a baseline custom function that doesn't use a framework.
+The encoded tier measures conversion between the same model and bytes, partitioned by format. It includes:
 
-## Latest benchmark
+- JSON: stdlib `json`, orjson, msgspec, mashumaro, Pydantic, and serpyco-rs
+- MessagePack: msgspec, mashumaro, serpyco-rs, and ormsgpack
+- Avro: the maintained `avro` distribution
+- Python object persistence: stdlib `pickle`
 
-Run on September 13, 2026, using the bundled Python 3.14 Docker image.
+## What is not compared
 
+Results from different encoded formats are not comparable. Format-crossing rankings, such as JSON against MessagePack, are invalid. Composite scores across formats or operations are also invalid and are deliberately not produced.
+
+## Methodology
+
+All adapters use the same canonical stdlib dataclasses and deterministic fixtures. The single-object cases and 100-object batch cases are measured separately. Adapter construction, schema setup, code generation, converters, and prepared decode inputs live outside the timed operation.
+
+Correctness is a gate, not an assumption. Before timing an adapter, the runner validates exact primitive output or normalized round trips, batch order and cardinality, encoded return types, and deterministic payload lengths. Garbage collection remains enabled and is recorded in the raw metadata. `pyperf` controls processes, warmups, loop calibration, and environment metadata. Encoded reports include payload sizes alongside timing data.
+
+## Canonical results
+
+The versioned 2026-09-06 snapshot is available as separate [primitive](results/reports/2026-09-06-cpython-3.14-primitive.md) and [encoded](results/reports/2026-09-06-cpython-3.14-encoded.md) reports. These are machine-specific measurements, not a portable performance baseline.
+
+> **Comparison warning:** Results from different machines or runs are not directly comparable. `pyperf` flagged 37 of 38 primitive benchmarks and 44 of 48 encoded benchmarks as potentially unstable. This snapshot is noisy and should not be used for close comparisons.
+
+The snapshot used CPython 3.14.6 (64-bit) on macOS 15.5, arm64, with an Apple M2 CPU (8 cores: 4 performance and 4 efficiency). Garbage collection was enabled. The primitive suite ran at `2026-09-06T23:52:07.196571+00:00` from revision `c1f0a332e358bd358330471aab22edad48e7b5d6`; the encoded suite ran at `2026-09-07T03:03:35.663136+00:00` from revision `5ccf7af2957171180b5dc7aedeea5bb9a95d925e`.
+
+## Install and validate
+
+Python 3.12, 3.13, and 3.14 are supported. Python 3.14 is the canonical benchmark runtime.
+
+```bash
+uv sync --locked
+uv run pytest
+uv run serialization-benchmark validate
 ```
-Library                  Many Objects (seconds)    One Object (seconds)    Relative
----------------------  ------------------------  ----------------------  ----------
-serpyco                              0.00333214              0.00165772     1
-Custom                               0.00395489              0.00182962     1.15925
-lima                                 0.0039432               0.00200844     1.19275
-Pickle                               0.00661707              0.00627398     2.58345
-serpy                                0.00961614              0.0049448      2.9181
-Strainer                             0.0123241               0.00605392     3.68307
-Toasted Marshmallow                  0.0188358               0.0102854      5.83606
-Colander                             0.0491045               0.0235727     14.565
-Avro                                 0.0878501               0.0419264     26.008
-Lollipop                             0.102559                0.0432115     29.2132
-Marshmallow                          0.112552                0.0537682     33.3316
-kim                                  0.173473                0.0878582     52.3724
-Django REST Framework                0.159167                0.121788      56.3051
+
+## Run benchmarks
+
+Use the smoke commands to verify the benchmark wiring quickly:
+
+```bash
+uv run serialization-benchmark run primitive --output results/raw/primitive-smoke.json --adapter handwritten --operation dump_one -- --processes=1 --values=1 --warmups=1 --loops=1
+uv run serialization-benchmark run encoded --output results/raw/encoded-smoke.json --adapter msgspec-json --operation encode_one -- --processes=1 --values=1 --warmups=1 --loops=1
 ```
 
+Use rigorous runs for complete measurements. These take substantially longer:
 
-## Running the test suite
+```bash
+uv run serialization-benchmark run primitive --output results/raw/primitive.json -- --rigorous
+uv run serialization-benchmark run encoded --output results/raw/encoded.json -- --rigorous
+```
 
-A Docker container is bundled with the repository which you can use to run the benchmarks. Firstly make sure you have Docker installed.
+## Generate reports
 
-1. Install Docker
+Generate each format-partitioned Markdown and HTML report from its raw `pyperf` data:
 
-2. Build the container `$ docker-compose build`
+```bash
+uv run serialization-benchmark report results/raw/primitive.json --markdown results/reports/primitive.md --html results/reports/primitive.html
+uv run serialization-benchmark report results/raw/encoded.json --markdown results/reports/encoded.md --html results/reports/encoded.html
+```
 
-3. Run the tests. `$ docker-compose run --rm tests`
+## Docker
+
+The Compose services reproduce the locked Python 3.14 environment. The primitive and encoded services write smoke results into the host `results/raw` directory.
+
+```bash
+docker compose build
+docker compose run --rm validate
+docker compose run --rm tests
+docker compose run --rm primitive
+docker compose run --rm encoded
+```
+
+## Interpreting results
+
+Compare rows only within the same tier, format, operation, batch size, and model strategy. Speed-vs-baseline values are meaningful only against the baseline in that table, and higher values mean faster operations. Measurements from different machines or runs are not directly comparable, including results from different hosted CI runners.
+
+## Pickle safety
+
+Never decode pickle bytes from an untrusted source. Pickle can execute arbitrary code while loading data and is included only as a Python object-persistence benchmark.
+
+## Adding an adapter
+
+Implement the appropriate primitive or encoded adapter contract, add an explicit instance to `serialization_benchmark.registry`, and declare its stable metadata and supported operations. The adapter must pass exact contract validation for every registered operation. Encoded adapters must declare their format so reports keep results in the correct format partition.

@@ -1,0 +1,74 @@
+name: Benchmark and publish Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  benchmark-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - run: uv sync --locked --python "3.14"
+      - run: uv run --locked --python "3.14" pytest
+      - run: uv run --locked --python "3.14" serialization-benchmark validate
+      - name: Run rigorous primitive benchmark
+        run: >-
+          uv run --locked --python "3.14" serialization-benchmark run primitive
+          --output results/raw/primitive.json -- --rigorous
+      - name: Run rigorous encoded benchmark
+        run: >-
+          uv run --locked --python "3.14" serialization-benchmark run encoded
+          --output results/raw/encoded.json -- --rigorous
+      - name: Generate Pages reports
+        run: |
+          uv run --locked --python "3.14" serialization-benchmark report results/raw/primitive.json --markdown results/site/index.md --html results/site/index.html
+          uv run --locked --python "3.14" serialization-benchmark report results/raw/encoded.json --markdown results/site/encoded.md --html results/site/encoded.html
+          uv run --locked --python "3.14" python - <<'PY'
+          from pathlib import Path
+
+          heading = "Serialization benchmark results: hardware-specific snapshot (not a regression baseline)"
+          rendered_heading = "Serialization benchmark results"
+          for report in Path("results/site").glob("*.md"):
+              lines = report.read_text(encoding="utf-8").splitlines()
+              if not lines or lines[0] != f"# {rendered_heading}":
+                  raise RuntimeError(f"unexpected Markdown heading in {report}")
+              report.write_text("\n".join((f"# {heading}", *lines[1:])) + "\n", encoding="utf-8")
+          for report in Path("results/site").glob("*.html"):
+              html = report.read_text(encoding="utf-8")
+              old_heading = f"<h1>{rendered_heading}</h1>"
+              if old_heading not in html:
+                  raise RuntimeError(f"unexpected HTML heading in {report}")
+              report.write_text(
+                  html.replace(old_heading, f"<h1>{heading}</h1>"),
+                  encoding="utf-8",
+              )
+          PY
+      - name: Upload raw data and reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: serialization-benchmark-results
+          path: |
+            results/raw/*.json
+            results/site/*.md
+            results/site/*.html
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: results/site
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

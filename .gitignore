@@ -1,6 +1,9 @@
 .cache/
 .venv/
-__pycache__
-*.pyc
-index.html
-REPORT.md
+.pytest_cache/
+.worktrees/
+__pycache__/
+*.py[cod]
+dist/
+build/
+results/site/
