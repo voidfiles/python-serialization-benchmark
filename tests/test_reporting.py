@@ -75,6 +75,34 @@ def test_relative_values_are_speed_ratios_with_higher_values_faster() -> None:
     assert "Relative" not in html
 
 
+def test_renderers_sort_each_group_fastest_to_slowest() -> None:
+    report = load_report(FIXTURE)
+    baseline = report.rows[0]
+    slowest = replace(
+        baseline,
+        adapter_slug="slowest",
+        adapter_name="Slowest",
+        mean_seconds=baseline.mean_seconds * 2,
+        operations_per_second=baseline.operations_per_second / 2,
+    )
+    fastest = replace(
+        baseline,
+        adapter_slug="fastest",
+        adapter_name="Fastest",
+        mean_seconds=baseline.mean_seconds / 2,
+        operations_per_second=baseline.operations_per_second * 2,
+    )
+    comparison = replace(report, rows=(slowest, baseline, fastest))
+
+    markdown = render_markdown(comparison)
+    html = render_html(comparison)
+
+    assert markdown.index("| Fastest |") < markdown.index(f"| {baseline.adapter_name} |")
+    assert markdown.index(f"| {baseline.adapter_name} |") < markdown.index("| Slowest |")
+    assert html.index("<td>Fastest</td>") < html.index(f"<td>{baseline.adapter_name}</td>")
+    assert html.index(f"<td>{baseline.adapter_name}</td>") < html.index("<td>Slowest</td>")
+
+
 @pytest.mark.parametrize(
     ("metadata_updates", "missing_metadata", "expected_key"),
     [

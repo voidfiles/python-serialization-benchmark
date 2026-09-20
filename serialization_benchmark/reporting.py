@@ -274,7 +274,7 @@ def _validate_suite_metadata(metadata: dict[str, object]) -> None:
         raise ReportError("suite metadata 'gc' must be 'enabled'")
 
 
-def _result_sort_key(row: ResultRow) -> tuple[int, str, str, int, str, str]:
+def _result_sort_key(row: ResultRow) -> tuple[int, str, str, int, str, float, str]:
     tier_order = {"primitive": 0, "encoded": 1}
     return (
         tier_order.get(row.tier, 2),
@@ -282,8 +282,12 @@ def _result_sort_key(row: ResultRow) -> tuple[int, str, str, int, str, str]:
         row.operation,
         row.batch_size,
         row.model_strategy,
-        row.adapter_slug,
+        *_benchmark_sort_key(row),
     )
+
+
+def _benchmark_sort_key(row: ResultRow) -> tuple[float, str]:
+    return row.mean_seconds, row.adapter_slug
 
 
 GroupKey: TypeAlias = tuple[str, str, str, int, str]
@@ -294,7 +298,7 @@ def _groups(rows: tuple[ResultRow, ...]) -> tuple[tuple[GroupKey, tuple[ResultRo
     for row in rows:
         grouped[(row.tier, row.format, row.operation, row.batch_size, row.model_strategy)].append(row)
     return tuple(
-        (key, tuple(sorted(group_rows, key=lambda row: row.adapter_slug)))
+        (key, tuple(sorted(group_rows, key=_benchmark_sort_key)))
         for key, group_rows in sorted(grouped.items(), key=lambda item: _group_sort_key(item[0]))
     )
 
